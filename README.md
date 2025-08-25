@@ -35,8 +35,6 @@ O banco de dados registra usuários, cafeterias, cafés, pedidos e avaliações,
 O diagrama completo está disponível neste link:  
 [Diagrama ER - Cafezito App](https://app.diagrams.net/?link_do_seu_diagrama_aqui)
 
-> Caso utilize NoSQL, aqui você incluiria os Schemas de cada coleção do banco.
-
 ## Planejamento de sprints
 
 Segue uma previsão de desenvolvimento dividida em sprints de 2 semanas cada:
