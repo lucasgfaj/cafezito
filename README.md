@@ -31,7 +31,7 @@ O banco de dados registra usuários, cafeterias, cafés, pedidos e avaliações,
 
 ### Diagrama Entidade-Relacionamento
 O diagrama completo está disponível neste link:  
-[Diagrama ER - Cafezito App](https://app.diagrams.net/?link_do_seu_diagrama_aqui)
+[Diagrama ER - Cafezito App](https://dbdiagram.io/d/68ac61921e7a6119677b448b)
 
 ## Planejamento de sprints
 
