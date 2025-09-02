@@ -1,6 +1,7 @@
 # Cafezito App
 
-O Cafezito App é um aplicativo pensado para os amantes de café. Ele permite descobrir cafés, registrar seus cafés favoritos, acompanhar pedidos e compartilhar experiências com amigos.  
+O Cafezito App é um aplicativo pensado para os amantes de café. Ele permite descobrir cafés de sua região, registrar seus cafés favoritos, acompanhar pedidos e compartilhar experiências.
+
 Projeto desenvolvido como atividade de curso de Sistemas para Internet na UTFPR - Guarapuava.
 
 ## Sobre o app
@@ -15,10 +16,12 @@ O app tem como objetivo principal melhorar a experiência de quem ama café, cen
 - [x] Notificações
 - [x] Compra de Cafés
 - [x] Histórico de Pedidos
+- [X] Carrinho de Compras
 
 ### Funcionalidades adicionais / futuras
 - Sugestão de cafés baseada em preferências
 - Promoções e cupons de desconto
+- Compartilhar Cafés
    
 ## Protótipos de tela
 
@@ -35,15 +38,16 @@ O diagrama completo está disponível neste link:
 
 ## Planejamento de sprints
 
-Segue uma previsão de desenvolvimento dividida em sprints de 2 semanas cada:
+Previsão de desenvolvimento dividida em sprints de 2 semanas cada:
 
 | Sprint | Funcionalidades previstas                       | Previsão de tempo |
 |--------|-----------------------------------------------|-----------------|
 | 1      | Configuração do ambiente, cadastro de usuários | 1 semanas       |
-| 2      | Listagem de cafeterias, registro de cafés favoritos | 1 semanas |
+| 2      | Listagem de cafés, registro de cafés favoritos | 1 semanas |
 | 3      | Avaliações                       | 1 semanas       |
-| 4      | Histórico de pedidos e integração com promoções | 2 semanas      |
-| 5      | Testes finais e ajustes                         | 2 semanas       |
+| 4      | Carrinho de Compras               | 2 semanas      |
+| 5      | Histórico de pedidos e integração com promoções | 2 semanas      |
+| 6      | Testes finais e ajustes                         | 2 semanas       |
 
 ## Ambiente de desenvolvimento e ferramentas
 
