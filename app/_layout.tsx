@@ -1,7 +1,29 @@
 import { Stack } from 'expo-router';
-export default function Layout() {
-  return (
+import * as SplashScreen from 'expo-splash-screen';
+import * as Font from 'expo-font';
+import { useEffect, useState } from 'react';
 
+SplashScreen.preventAutoHideAsync();
+
+export default function Layout() {
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  useEffect(() => {
+    async function loadFonts() {
+      await Font.loadAsync({
+        'Sora': require('@/assets/fonts/Sora-VariableFont_wght.ttf'),
+      });
+
+      setFontsLoaded(true);
+      await SplashScreen.hideAsync();
+    }
+
+    loadFonts();
+  }, []);
+
+  if (!fontsLoaded) return null;
+
+  return (
     <Stack
       screenOptions={{
         headerShown: false,
@@ -14,18 +36,8 @@ export default function Layout() {
         },
       }}
     >
-      <Stack.Screen
-        name="index"
-        // options={{ title: 'MyCoffe' }}
-        options={{ headerShown: false}} 
-   
-      />
-      <Stack.Screen
-        name="login"
-        // options={{ title: 'MyCoffe' }}
-        options={{ headerShown: false}} 
-   
-      />
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="login" options={{ headerShown: false }} />
     </Stack>
   );
 }
