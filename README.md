@@ -26,8 +26,7 @@ O app tem como objetivo principal melhorar a experiência de quem ama café, cen
 ## Protótipos de tela
 
 Os protótipos de tela foram criados no Figma e estão disponíveis para visualização pública:  
-[Figma - Protótipos do Cafezito App]([https://www.figma.com/file/SEU_LINK_AQUI](https://www.figma.com/design/dnHIbg0CA0LHI5DLtZBeey/Coffee-Shop-Mobile-App-Design--Community-?node-id=2-2&t=k4Km52NICniX6mFw-1))
-
+[Figma Cafezito App](https://www.figma.com/design/dnHIbg0CA0LHI5DLtZBeey/Coffee-Shop-Mobile-App-Design--Community-?node-id=2-2&m=dev&t=j8uoSRgw0Z1dW2JU-1)
 ## Modelagem do banco
 
 O banco de dados registra usuários, cafeterias, cafés, pedidos e avaliações, favoritos.
