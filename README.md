@@ -13,6 +13,7 @@ O app tem como objetivo principal melhorar a experiência de quem ama café, cen
 - [x] Listagem de cafés
 - [x] Registro de cafés favoritos
 - [x] Avaliação dos cafés
+- [x] Notificações
 - [x] Compra de Cafés
 - [x] Histórico de Pedidos
 - [X] Carrinho de Compras
@@ -21,20 +22,26 @@ O app tem como objetivo principal melhorar a experiência de quem ama café, cen
 - Sugestão de cafés baseada em preferências
 - Promoções e cupons de desconto
 - Compartilhar Cafés
-- Notificações
    
 ## Protótipos de tela
 
 Os protótipos de tela foram criados no Figma e estão disponíveis para visualização pública:  
 [Figma Cafezito App](https://www.figma.com/design/dnHIbg0CA0LHI5DLtZBeey/Coffee-Shop-Mobile-App-Design--Community-?node-id=2-2&m=dev&t=j8uoSRgw0Z1dW2JU-1)
-## Modelagem do banco
 
-O banco de dados registra usuários, cafeterias, cafés, pedidos e avaliações, favoritos.
+## Banco de Dados
+
+O banco de dados armazena as principais informações do sistema: **usuários, cafeterias, cafés, pedidos, avaliações e favoritos**.  
+
+A camada de dados é gerenciada pelo **[Supabase](https://supabase.com/)**, que fornece:  
+- Banco relacional baseado em **PostgreSQL**  
+- Autenticação e gerenciamento de usuários integrados  
+- Regras de segurança via **Row Level Security (RLS)**  
+- APIs automáticas (REST e GraphQL)  
+- Suporte a atualizações em tempo real (**Realtime**)  
 
 ### Diagrama Entidade-Relacionamento
-O diagrama completo está disponível neste link:  
-[Diagrama ER - Cafezito App](https://dbdiagram.io/d/68ac61921e7a6119677b448b)
-
+O diagrama completo do banco pode ser acessado aqui:  
+[Diagrama ER - Cafezito App](https://dbdiagram.io/d/Cafezito-68ac61921e7a6119677b448b)
 ## Planejamento de sprints
 
 Previsão de desenvolvimento dividida em sprints de 2 semanas cada:
