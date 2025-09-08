@@ -7,20 +7,13 @@ import {
   Text,
   TextInput,
   View,
-  AppState,
   Alert,
 } from "react-native";
 import Button from "./ui/Button";
 import { supabase } from "@/lib/supabase";
 import { useState } from "react";
 
-AppState.addEventListener("change", (state) => {
-  if (state === "active") {
-    supabase.auth.startAutoRefresh();
-  } else {
-    supabase.auth.stopAutoRefresh();
-  }
-});
+
 const SignInScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -34,7 +27,7 @@ const SignInScreen = () => {
     });
 
     Alert.alert('Welcome to the Cafezito!');
-    
+
     if (error) Alert.alert(error.message);
     setLoading(false);
   }
