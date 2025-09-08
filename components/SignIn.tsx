@@ -1,5 +1,3 @@
-// app/login.tsx
-
 import { useRouter } from "expo-router";
 import React from "react";
 import {
@@ -9,10 +7,35 @@ import {
   Text,
   TextInput,
   View,
+  AppState,
+  Alert,
 } from "react-native";
 import Button from "./ui/Button";
+import { supabase } from "@/lib/supabase";
+import { useState } from "react";
 
-const RegisterScreen = () => {
+AppState.addEventListener("change", (state) => {
+  if (state === "active") {
+    supabase.auth.startAutoRefresh();
+  } else {
+    supabase.auth.stopAutoRefresh();
+  }
+});
+const SignInScreen = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function signInInWithEmail() {
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+    });
+
+    if (error) Alert.alert(error.message);
+    setLoading(false);
+  }
   return (
     <ImageBackground
       source={require("@/assets/images/background/background.png")}
@@ -29,28 +52,17 @@ const RegisterScreen = () => {
             />
             <Text style={styles.title}>Cafezito</Text>
           </View>
-          <Text style={styles.subtitle}>Register</Text>
-
-          <TextInput
-            placeholder="Name"
-            placeholderTextColor="#aaa"
-            style={styles.input}
-            keyboardType="email-address"
-          />
+          <Text style={styles.subtitle}>Log-In</Text>
 
           <TextInput
             placeholder="E-mail"
             placeholderTextColor="#aaa"
             style={styles.input}
-            keyboardType="default"
-          />
-
-
-          <TextInput
-            placeholder="Address"
-            placeholderTextColor="#aaa"
-            style={styles.input}
-            keyboardType="default"
+            keyboardType="email-address"
+            autoCapitalize={"none"}
+            secureTextEntry={true}
+            onChangeText={(text) => setEmail(text)}
+            value={email}
           />
 
           <TextInput
@@ -58,27 +70,25 @@ const RegisterScreen = () => {
             placeholderTextColor="#aaa"
             secureTextEntry
             style={styles.input}
+            onChangeText={(text) => setPassword(text)}
+            value={password}
+            autoCapitalize={"none"}
           />
 
-          <TextInput
-            placeholder="Repeat your password"
-            placeholderTextColor="#aaa"
-            secureTextEntry
-            style={styles.input}
+          <Button
+            disabled={loading}
+            onPress={() => signInInWithEmail()}
+            text={"Sign-In"}
+            style={styles.SignInButton}
           />
-
-      <Button
-          text={"Register Now"}
-          style={styles.loginButton}
-        />
 
           <Text style={styles.footerText}>
-            Already have an account?{" "}
+            Not registered yet?{" "}
             <Text
-              onPress={() => router.push("/login")}
-              style={styles.registerText}
+              onPress={() => router.push("/signUp")}
+              style={styles.SignUpText}
             >
-              Register Now
+              Sign-Up
             </Text>
           </Text>
         </View>
@@ -86,7 +96,6 @@ const RegisterScreen = () => {
     </ImageBackground>
   );
 };
-
 const styles = StyleSheet.create({
   background: {
     flex: 1,
@@ -103,7 +112,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     width: "85%",
     borderRadius: 16,
-    paddingVertical: 5,
+    paddingVertical: 32,
     paddingHorizontal: 24,
     alignItems: "center",
     shadowColor: "#000",
@@ -120,7 +129,7 @@ const styles = StyleSheet.create({
   title: {
     marginTop: 10,
     fontSize: 30,
-    fontFamily: 'Sora',
+    fontFamily: "Sora",
     fontWeight: "700",
     color: "#A0522D",
     marginBottom: 8,
@@ -128,9 +137,9 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 22,
     fontWeight: "700",
-    fontFamily: 'Sora',
+    fontFamily: "Sora",
     color: "#000",
-    marginBottom: 10,
+    marginBottom: 24,
   },
   input: {
     width: "100%",
@@ -147,11 +156,12 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: "#A0522D",
     paddingVertical: 12,
-    paddingHorizontal: 14,
+    paddingHorizontal: 24,
     borderRadius: 12,
     width: "100%",
     alignItems: "center",
     marginTop: 8,
+    marginBottom: 16,
   },
   buttonText: {
     color: "#fff",
@@ -159,25 +169,23 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   footerText: {
-    fontFamily: 'Sora',
-    fontWeight: "400",
+    fontFamily: "Sora",
     color: "#000",
-    fontSize: 12,
-    marginBottom: 10,
+    fontSize: 14,
   },
-  registerText: {
+  SignUpText: {
     color: "#A0522D",
     fontWeight: "600",
   },
   logoView: {
-    flexDirection: 'row'
+    flexDirection: "row",
   },
-    loginButton: {
+  SignInButton: {
     width: "100%",
-    marginBottom: 10
+    marginBottom: 10,
   },
 });
 
-export default RegisterScreen;
+export default SignInScreen;
 
 const router = useRouter();
