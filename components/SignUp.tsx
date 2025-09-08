@@ -1,5 +1,3 @@
-// app/login.tsx
-
 import { useRouter } from "expo-router";
 import React from "react";
 import {
@@ -9,10 +7,79 @@ import {
   Text,
   TextInput,
   View,
+  AppState,
+  Alert,
 } from "react-native";
 import Button from "./ui/Button";
+import { supabase } from "@/lib/supabase";
+import { useState } from "react";
+import {
+  SupabaseError,
+  SupabaseSignUp,
+  SupabaseSignUpResponse,
+  SupabaseUser,
+} from "@/types/supabaseType";
 
-const RegisterScreen = () => {
+const SignUpScreen = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function signUpWithEmail() {
+    if (password !== confirmPassword) {
+      Alert.alert("Passwords do not match!");
+      return;
+    }
+
+    setLoading(true);
+    const { data, error }: SupabaseSignUp = await supabase.auth.signUp({
+      email: email,
+      password: password,
+    });
+
+    if (error) {
+      Alert.alert("Error signing up: " + error.message);
+      setLoading(false);
+      return;
+    }
+
+    const { user }: { user: SupabaseUser } = data;
+
+    try {
+      const { error: insertError } = await supabase.from("users").insert([
+        {
+          id: user.id,
+          email: user.email,
+          name: name,
+          phone: phone,
+          address: address,
+          created_at: new Date(),
+        },
+      ]);
+
+      if (insertError) {
+        throw new Error(insertError.message);
+      }
+
+      Alert.alert("Sign up successful! Please log in.");
+      router.push("/signIn");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        Alert.alert("Error saving user data: " + error.message);
+      } else {
+        Alert.alert("An unexpected error occurred.");
+      }
+    } finally {
+      setLoading(false);
+    }
+    /*if (!session) Alert.alert("Check your email for the login link!");
+    setLoading(false);*/
+  }
+
   return (
     <ImageBackground
       source={require("@/assets/images/background/background.png")}
@@ -35,22 +102,40 @@ const RegisterScreen = () => {
             placeholder="Name"
             placeholderTextColor="#aaa"
             style={styles.input}
-            keyboardType="email-address"
+            keyboardType="default"
+            onChangeText={(text) => setName(text)}
+            value={name}
+            autoCapitalize={"none"}
           />
 
           <TextInput
             placeholder="E-mail"
             placeholderTextColor="#aaa"
             style={styles.input}
-            keyboardType="default"
+            keyboardType="email-address"
+            onChangeText={(text) => setEmail(text)}
+            value={email}
+            autoCapitalize={"none"}
           />
-
 
           <TextInput
             placeholder="Address"
             placeholderTextColor="#aaa"
             style={styles.input}
             keyboardType="default"
+            onChangeText={(text) => setAddress(text)}
+            value={address}
+            autoCapitalize={"none"}
+          />
+
+          <TextInput
+            placeholder="Phone"
+            placeholderTextColor="#aaa"
+            style={styles.input}
+            keyboardType="default"
+            onChangeText={(text) => setPhone(text)}
+            value={phone}
+            autoCapitalize={"none"}
           />
 
           <TextInput
@@ -58,6 +143,9 @@ const RegisterScreen = () => {
             placeholderTextColor="#aaa"
             secureTextEntry
             style={styles.input}
+            onChangeText={(text) => setPassword(text)}
+            value={password}
+            autoCapitalize={"none"}
           />
 
           <TextInput
@@ -65,20 +153,25 @@ const RegisterScreen = () => {
             placeholderTextColor="#aaa"
             secureTextEntry
             style={styles.input}
+            onChangeText={(text) => setConfirmPassword(text)}
+            value={confirmPassword}
+            autoCapitalize={"none"}
           />
 
-      <Button
-          text={"Register Now"}
-          style={styles.loginButton}
-        />
+          <Button
+            text={"Sign-Up"}
+            style={styles.signUpButton}
+            disabled={loading}
+            onPress={() => signUpWithEmail()}
+          />
 
           <Text style={styles.footerText}>
             Already have an account?{" "}
             <Text
-              onPress={() => router.push("/login")}
-              style={styles.registerText}
+              onPress={() => router.push("/signIn")}
+              style={styles.signInText}
             >
-              Register Now
+              Sign-In
             </Text>
           </Text>
         </View>
@@ -120,7 +213,7 @@ const styles = StyleSheet.create({
   title: {
     marginTop: 10,
     fontSize: 30,
-    fontFamily: 'Sora',
+    fontFamily: "Sora",
     fontWeight: "700",
     color: "#A0522D",
     marginBottom: 8,
@@ -128,7 +221,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 22,
     fontWeight: "700",
-    fontFamily: 'Sora',
+    fontFamily: "Sora",
     color: "#000",
     marginBottom: 10,
   },
@@ -159,25 +252,25 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   footerText: {
-    fontFamily: 'Sora',
+    fontFamily: "Sora",
     fontWeight: "400",
     color: "#000",
     fontSize: 12,
     marginBottom: 10,
   },
-  registerText: {
+  signInText: {
     color: "#A0522D",
     fontWeight: "600",
   },
   logoView: {
-    flexDirection: 'row'
+    flexDirection: "row",
   },
-    loginButton: {
+  signUpButton: {
     width: "100%",
-    marginBottom: 10
+    marginBottom: 10,
   },
 });
 
-export default RegisterScreen;
+export default SignUpScreen;
 
 const router = useRouter();

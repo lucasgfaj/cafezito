@@ -24,6 +24,7 @@ interface ButtonProps {
   iconSize?: number;
    iconTestID?: string;
   testID?: string;
+  disabled?: boolean;
 }
 
 export default function Button({

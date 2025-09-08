@@ -1,9 +1,19 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { AppState, Image, StyleSheet, Text, View } from "react-native";
 import Button from "./ui/Button";
+import { supabase } from "@/lib/supabase";
+
+AppState.addEventListener("change", (state) => {
+  if (state === "active") {
+    supabase.auth.startAutoRefresh();
+  } else {
+    supabase.auth.stopAutoRefresh();
+  }
+});
 
 export default function Index() {
+  
   const router = useRouter();
 
   return (
@@ -33,7 +43,7 @@ export default function Index() {
             borderRadius={12}
             text="Get Started"
             textColor="#fff"
-            onPress={() => router.push("/login")}
+            onPress={() => router.push("/signIn")}
           />
         </View>
       </LinearGradient>

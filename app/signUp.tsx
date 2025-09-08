@@ -1,11 +1,11 @@
-import RegisterScreen from '@/components/RegisterForm';
+import SignUpScreen from '@/components/SignUp';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-const Register = () => {
+const signUp = () => {
     return (
         <View style={styles.container}>
-            <RegisterScreen/>
+         <SignUpScreen/>
         </View>
     );
 }
@@ -16,4 +16,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Register;
+export default signUp;

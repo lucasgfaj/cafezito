@@ -1,5 +1,3 @@
-// app/login.tsx
-
 import { useRouter } from "expo-router";
 import React from "react";
 import {
@@ -8,12 +6,31 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
+  Alert,
 } from "react-native";
 import Button from "./ui/Button";
+import { supabase } from "@/lib/supabase";
+import { useState } from "react";
 
-const LoginScreen = () => {
+
+const SignInScreen = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function signInInWithEmail() {
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+    });
+
+    Alert.alert('Welcome to the Cafezito!');
+
+    if (error) Alert.alert(error.message);
+    setLoading(false);
+  }
   return (
     <ImageBackground
       source={require("@/assets/images/background/background.png")}
@@ -37,6 +54,10 @@ const LoginScreen = () => {
             placeholderTextColor="#aaa"
             style={styles.input}
             keyboardType="email-address"
+            autoCapitalize={"none"}
+            secureTextEntry={true}
+            onChangeText={(text) => setEmail(text)}
+            value={email}
           />
 
           <TextInput
@@ -44,20 +65,25 @@ const LoginScreen = () => {
             placeholderTextColor="#aaa"
             secureTextEntry
             style={styles.input}
+            onChangeText={(text) => setPassword(text)}
+            value={password}
+            autoCapitalize={"none"}
           />
 
-      <Button
-          text={"Log-In"}
-          style={styles.loginButton}
-        />
+          <Button
+            disabled={loading}
+            onPress={() => signInInWithEmail()}
+            text={"Sign-In"}
+            style={styles.SignInButton}
+          />
 
           <Text style={styles.footerText}>
             Not registered yet?{" "}
             <Text
-              onPress={() => router.push("/register")}
-              style={styles.registerText}
+              onPress={() => router.push("/signUp")}
+              style={styles.SignUpText}
             >
-              Register
+              Sign-Up
             </Text>
           </Text>
         </View>
@@ -65,7 +91,6 @@ const LoginScreen = () => {
     </ImageBackground>
   );
 };
-
 const styles = StyleSheet.create({
   background: {
     flex: 1,
@@ -99,7 +124,7 @@ const styles = StyleSheet.create({
   title: {
     marginTop: 10,
     fontSize: 30,
-    fontFamily: 'Sora',
+    fontFamily: "Sora",
     fontWeight: "700",
     color: "#A0522D",
     marginBottom: 8,
@@ -107,7 +132,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 22,
     fontWeight: "700",
-    fontFamily: 'Sora',
+    fontFamily: "Sora",
     color: "#000",
     marginBottom: 24,
   },
@@ -139,23 +164,23 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   footerText: {
-    fontFamily: 'Sora',
+    fontFamily: "Sora",
     color: "#000",
     fontSize: 14,
   },
-  registerText: {
+  SignUpText: {
     color: "#A0522D",
     fontWeight: "600",
   },
   logoView: {
-    flexDirection: 'row'
+    flexDirection: "row",
   },
-    loginButton: {
+  SignInButton: {
     width: "100%",
-    marginBottom: 10
+    marginBottom: 10,
   },
 });
 
-export default LoginScreen;
+export default SignInScreen;
 
 const router = useRouter();

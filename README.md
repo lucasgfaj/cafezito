@@ -13,7 +13,6 @@ O app tem como objetivo principal melhorar a experiência de quem ama café, cen
 - [x] Listagem de cafés
 - [x] Registro de cafés favoritos
 - [x] Avaliação dos cafés
-- [x] Notificações
 - [x] Compra de Cafés
 - [x] Histórico de Pedidos
 - [X] Carrinho de Compras
@@ -22,6 +21,7 @@ O app tem como objetivo principal melhorar a experiência de quem ama café, cen
 - Sugestão de cafés baseada em preferências
 - Promoções e cupons de desconto
 - Compartilhar Cafés
+- Notificações
    
 ## Protótipos de tela
 
