@@ -33,6 +33,8 @@ const SignInScreen = () => {
       password: password,
     });
 
+    Alert.alert('Welcome to the Cafezito!');
+    
     if (error) Alert.alert(error.message);
     setLoading(false);
   }

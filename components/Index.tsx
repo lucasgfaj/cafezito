@@ -33,7 +33,7 @@ export default function Index() {
             borderRadius={12}
             text="Get Started"
             textColor="#fff"
-            onPress={() => router.push("/login")}
+            onPress={() => router.push("/signIn")}
           />
         </View>
       </LinearGradient>

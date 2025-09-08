@@ -13,6 +13,12 @@ import {
 import Button from "./ui/Button";
 import { supabase } from "@/lib/supabase";
 import { useState } from "react";
+import {
+  SupabaseError,
+  SupabaseSignUp,
+  SupabaseSignUpResponse,
+  SupabaseUser,
+} from "@/types/supabaseType";
 
 AppState.addEventListener("change", (state) => {
   if (state === "active") {
@@ -27,29 +33,59 @@ const SignUpScreen = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
 
-
-  if (password !== confirmPassword) {
-    Alert.alert("Passwords do not match!");
-    return;
-  }
-
-  
   async function signUpWithEmail() {
+    if (password !== confirmPassword) {
+      Alert.alert("Passwords do not match!");
+      return;
+    }
+
     setLoading(true);
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.signUp({
+    const { data, error }: SupabaseSignUp = await supabase.auth.signUp({
       email: email,
       password: password,
     });
 
-    if (error) Alert.alert(error.message);
-    if (!session) Alert.alert("Check your email for the login link!");
-    setLoading(false);
+    if (error) {
+      Alert.alert("Error signing up: " + error.message);
+      setLoading(false);
+      return;
+    }
+
+    const { user }: { user: SupabaseUser } = data;
+
+    try {
+      const { error: insertError } = await supabase.from("users").insert([
+        {
+          id: user.id,
+          email: user.email,
+          name: name,
+          phone: phone,
+          address: address,
+          created_at: new Date(),
+        },
+      ]);
+
+      if (insertError) {
+        throw new Error(insertError.message);
+      }
+
+      Alert.alert("Sign up successful! Please log in.");
+      router.push("/signIn");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        Alert.alert("Error saving user data: " + error.message);
+      } else {
+        Alert.alert("An unexpected error occurred.");
+      }
+    } finally {
+      setLoading(false);
+    }
+    /*if (!session) Alert.alert("Check your email for the login link!");
+    setLoading(false);*/
   }
 
   return (
@@ -77,18 +113,17 @@ const SignUpScreen = () => {
             keyboardType="default"
             onChangeText={(text) => setName(text)}
             value={name}
-            autoCapitalize={'none'}
+            autoCapitalize={"none"}
           />
 
           <TextInput
             placeholder="E-mail"
             placeholderTextColor="#aaa"
             style={styles.input}
-            keyboardType="default"
+            keyboardType="email-address"
             onChangeText={(text) => setEmail(text)}
             value={email}
-            autoCapitalize={'none'}
-            secureTextEntry={true}
+            autoCapitalize={"none"}
           />
 
           <TextInput
@@ -98,7 +133,17 @@ const SignUpScreen = () => {
             keyboardType="default"
             onChangeText={(text) => setAddress(text)}
             value={address}
-            autoCapitalize={'none'}
+            autoCapitalize={"none"}
+          />
+
+          <TextInput
+            placeholder="Phone"
+            placeholderTextColor="#aaa"
+            style={styles.input}
+            keyboardType="default"
+            onChangeText={(text) => setPhone(text)}
+            value={phone}
+            autoCapitalize={"none"}
           />
 
           <TextInput
@@ -121,20 +166,20 @@ const SignUpScreen = () => {
             autoCapitalize={"none"}
           />
 
-          <Button 
-          text={"Register Now"} 
-          style={styles.signUpButton}
-          disabled={loading}
-          onPress={() => signUpWithEmail()}          
+          <Button
+            text={"Sign-Up"}
+            style={styles.signUpButton}
+            disabled={loading}
+            onPress={() => signUpWithEmail()}
           />
 
           <Text style={styles.footerText}>
             Already have an account?{" "}
             <Text
-              onPress={() => router.push("/singIn")}
+              onPress={() => router.push("/signIn")}
               style={styles.signInText}
             >
-              Register Now
+              Sign-In
             </Text>
           </Text>
         </View>
