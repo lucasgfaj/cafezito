@@ -26,7 +26,8 @@ const SignInScreen = () => {
       password: password,
     });
 
-    Alert.alert('Welcome to the Cafezito!');
+    /*Alert.alert('Welcome to the Cafezito!');*/
+    router.push('/(panel)/home');
 
     if (error) Alert.alert(error.message);
     setLoading(false);
