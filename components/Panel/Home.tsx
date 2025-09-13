@@ -5,13 +5,14 @@ import CardImg from "@/components/ui/CardImg";
 import Slider from "@/components/ui/Slider";
 import useCoffes from "@/hooks/useCoffees";
 import { categorys } from "@/mocks/categorys";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
 export default function HomeBar() {
   const [categories, setCategories] =
     useState<{ id: string; name: string }[]>(categorys);
   const [selectedCategory, setSelectedCategory] = useState<string>("All Coffe");
+  const [search, setSearch] = useState("");
 
   const { filteredCoffees: coffees, loading } = useCoffes(selectedCategory);
 
@@ -20,11 +21,15 @@ export default function HomeBar() {
     setSelectedCategory(item.name);
   };
 
+  const visibleCoffees = coffees.filter((coffee) =>
+    coffee.name.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.topSection}>
         <Location />
-        <SearchBar />
+        <SearchBar value={search} onChangeText={setSearch} />
         <CardImg
           image={require("../../assets/images/art/coffe.png")}
           width={320}
@@ -45,8 +50,8 @@ export default function HomeBar() {
           onPressItem={handleCategoryPress}
         />
         <View style={styles.storeListContainer}>
-          <StoreList coffees={coffees} />
-        </View>   
+          <StoreList coffees={visibleCoffees} />
+        </View>
       </View>
     </ScrollView>
   );

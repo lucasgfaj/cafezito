@@ -1,9 +1,14 @@
-import { Ionicons } from "@expo/vector-icons"; // ou qualquer lib de ícones
+import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import Button from "../ui/Button";
 
-export default function SearchBar() {
+interface SearchBarProps {
+  value: string;
+  onChangeText: (text: string) => void;
+}
+
+export default function SearchBar({ value, onChangeText }: SearchBarProps) {
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
@@ -12,6 +17,8 @@ export default function SearchBar() {
           style={styles.input}
           placeholder="Search coffee"
           placeholderTextColor="#9A9A9D"
+          value={value}
+          onChangeText={onChangeText}
         />
       </View>
       <Button
@@ -19,7 +26,7 @@ export default function SearchBar() {
         height={40}
         backgroundColor="#C67C4E"
         borderRadius={12}
-        icon="options-outline" // se você customizar o Button para aceitar ícones
+        icon="options-outline"
         textColor="#fff"
       />
     </View>

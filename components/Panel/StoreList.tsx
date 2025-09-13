@@ -33,7 +33,7 @@ export default function StoreList({ coffees, loading }: StoreListProps) {
       renderItem={({ item }) => (
         <View style={[styles.cardContainer, { width: CARD_WIDTH }]}>
           <StoreCard
-            image={item.image_url}
+            image={{ uri: item.image_url }}
             title={item.name}
             description={item.description}
             price={String(item.price)}
