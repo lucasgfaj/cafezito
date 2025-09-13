@@ -3,26 +3,17 @@ import SearchBar from "@/components/Panel/SearchBar";
 import StoreList from "@/components/Panel/StoreList";
 import CardImg from "@/components/ui/CardImg";
 import Slider from "@/components/ui/Slider";
+import useCoffes from "@/hooks/useCoffees";
 import { categorys } from "@/mocks/categorys";
-import { products } from "@/mocks/products";
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
 export default function HomeBar() {
-  const [categories, setCategories] = useState<{ id: string; name: string }[]>(categorys);
+  const [categories, setCategories] =
+    useState<{ id: string; name: string }[]>(categorys);
   const [selectedCategory, setSelectedCategory] = useState<string>("All Coffe");
-  const [filteredProducts, setFilteredProducts] = useState(products);
 
-  useEffect(() => {
-    if (selectedCategory === "All Coffe") {
-      setFilteredProducts(products);
-    } else {
-      const filtered = products.filter((product) =>
-        product.title.toLowerCase().includes(selectedCategory.toLowerCase())
-      );
-      setFilteredProducts(filtered);
-    }
-  }, [selectedCategory]);
+  const { filteredCoffees: coffees, loading } = useCoffes(selectedCategory);
 
   const handleCategoryPress = (item: { id: string; name: string }) => {
     console.log("Selecionado:", item.name);
@@ -54,8 +45,8 @@ export default function HomeBar() {
           onPressItem={handleCategoryPress}
         />
         <View style={styles.storeListContainer}>
-          <StoreList products={filteredProducts} />
-        </View>
+          <StoreList coffees={coffees} />
+        </View>   
       </View>
     </ScrollView>
   );

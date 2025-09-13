@@ -19,19 +19,32 @@ const SignInScreen = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function signInInWithEmail() {
+ async function signInWithEmail() {
+  try {
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
     });
 
-    /*Alert.alert('Welcome to the Cafezito!');*/
-    router.push('/(panel)/home');
+    if (error) {
+      Alert.alert("Erro", error.message);
+      return;
+    }
 
-    if (error) Alert.alert(error.message);
+    // Se chegou aqui, logou com sucesso
+    if (data?.session) {
+      router.push('/(panel)/home');
+    }
+
+  } catch (e: any) {
+    Alert.alert("Erro inesperado", e.message);
+  } finally {
     setLoading(false);
   }
+}
+
   return (
     <ImageBackground
       source={require("@/assets/images/background/background.png")}
@@ -73,7 +86,7 @@ const SignInScreen = () => {
 
           <Button
             disabled={loading}
-            onPress={() => signInInWithEmail()}
+            onPress={() => signInWithEmail()}
             text={"Sign-In"}
             style={styles.SignInButton}
           />

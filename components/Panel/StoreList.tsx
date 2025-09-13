@@ -1,28 +1,30 @@
-import { Product } from '@/constants/Product';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { Dimensions, FlatList, StyleSheet, View } from 'react-native';
 import StoreCard from './StoreCard';
+import { Coffe } from '@/types/coffeType';
 
 const { width } = Dimensions.get('window');
 const CARD_GAP = 16;
 const CARD_WIDTH = (width - CARD_GAP * 3) / 2; // 2 cards por linha
 
 interface StoreListProps {
-  products: Product[];
+  coffees: Coffe[];
+  loading?: boolean;
 }
 
 
-export default function StoreList({ products }: StoreListProps) {
+export default function StoreList({ coffees, loading }: StoreListProps) {
   const router = useRouter();
 
-  const handlePress = (productId: string) => {
-    router.push(`/(details)/detail?id=${productId}`);
+  const handlePress = (coffeeId: string) => {
+    // router.push(`/(details)/detail?id=${coffeeId}`);
+    console.log('Coffee ID:', coffeeId);
   };
 
   return (
     <FlatList
-      data={products}
+      data={coffees}
       keyExtractor={(item) => item.id}
       numColumns={2}
       showsVerticalScrollIndicator={false}
@@ -31,12 +33,12 @@ export default function StoreList({ products }: StoreListProps) {
       renderItem={({ item }) => (
         <View style={[styles.cardContainer, { width: CARD_WIDTH }]}>
           <StoreCard
-            image={item.image}
-            title={item.title}
+            image={item.image_url}
+            title={item.name}
             description={item.description}
             price={String(item.price)}
             rating={item.rating}
-            onPressAdd={() => console.log('Adicionado:', item.title)}
+            onPressAdd={() => console.log('Adicionado:', item.name)}
             onPress={() => handlePress(item.id)}
           />
         </View>

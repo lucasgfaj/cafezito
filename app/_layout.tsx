@@ -56,7 +56,7 @@ function RootLayoutInner() {
   return (
     <Stack
       screenOptions={{
-        headerShown: true, // default
+        headerShown: false,
       }}
     >
       <Stack.Screen name="(panel)" options={{ headerShown: false }} />
