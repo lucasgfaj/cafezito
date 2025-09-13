@@ -1,3 +1,4 @@
+import { LOCATIONS } from '@/mocks/locations';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import React, { useState } from 'react';
 import {
@@ -8,8 +9,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-
-const LOCATIONS = ['Bilzen, Tanjungbalai', 'Jakarta', 'São Paulo', 'Bali', 'Curitiba'];
 
 export default function Location() {
   const [selected, setSelected] = useState(LOCATIONS[0]);

@@ -13,83 +13,18 @@ import {
 
 import Button from "@/components/ui/Button";
 import { useTokenContext } from "@/context/useContext";
-import api from "@/services/api";
 
-export default function Profile() {
+export default function AccountBar() {
   const { token, userId, setToken, setUserId } = useTokenContext();
   const router = useRouter();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [address, setAddress] = useState("");
+  const [password, setPassword] = useState("");
+
   const [isEditing, setIsEditing] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
-
-  useEffect(() => {
-    if (!token || !userId) {
-      router.replace("/login");
-      return;
-    }
-
-    fetchUserData();
-  }, [token, userId]);
-
-  const fetchUserData = async () => {
-    try {
-      const res = await api.get(`/api/collections/users/records/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const user = res.data;
-      setName(user.name);
-      setEmail(user.email);
-    } catch (error) {
-      console.error("Erro ao carregar dados:", error);
-      Alert.alert("Erro", "Falha ao carregar dados do perfil.");
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      setToken(undefined);
-      setUserId(undefined);
-      router.replace("/login");
-    } catch (error) {
-      Alert.alert("Erro", "Falha ao fazer logout.");
-    }
-  };
-
-  const handleSave = async () => {
-    if (!name.trim()) {
-      Alert.alert("Erro", "Nome não pode ser vazio");
-      return;
-    }
-
-    try {
-      setLoadingSave(true);
-
-      await api.patch(
-        `/api/collections/users/records/${userId}`,
-        {
-          name: name.trim(),
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      Alert.alert("Sucesso", "Nome atualizado!");
-      setIsEditing(false);
-    } catch (error: any) {
-      console.error("Erro ao salvar perfil:", error);
-      Alert.alert("Erro", error.message || "Falha ao atualizar perfil");
-    } finally {
-      setLoadingSave(false);
-    }
-  };
 
   return (
     <ScrollView
@@ -98,7 +33,7 @@ export default function Profile() {
       showsVerticalScrollIndicator={false}
     >
       <View style={styles.header}>
-        <Text style={styles.headerText}>Meu Perfil</Text>
+        <Text style={styles.headerText}>Profile</Text>
         <TouchableOpacity onPress={() => setIsEditing(!isEditing)}>
           <Feather name={isEditing ? "x" : "edit"} size={24} color="#fff" />
         </TouchableOpacity>
@@ -123,6 +58,16 @@ export default function Profile() {
           autoCorrect={false}
         />
 
+          <Text style={[styles.label, { marginTop: 24 }]}>Password</Text>
+        <TextInput
+          style={[styles.input, styles.inputDisabled]}
+          value={password}
+          editable={false}
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
+
+
         {isEditing && (
           <View style={styles.buttonWrapper}>
             <Button
@@ -131,7 +76,7 @@ export default function Profile() {
               borderRadius={12}
               icon="save"
               backgroundColor="#4CAF50"
-              onPress={handleSave}
+              onPress={() => {}}
               text={loadingSave ? "Salvando..." : "Salvar Nome"}
             />
           </View>
@@ -144,7 +89,7 @@ export default function Profile() {
             borderRadius={12}
             icon="log-out"
             backgroundColor="#7B3F00"
-            onPress={handleLogout}
+            onPress={() => {}}
             text="Deslogar"
           />
         </View>
@@ -191,6 +136,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     fontSize: 15,
   },
-  inputDisabled: { backgroundColor: "#e0e0e0", color: "#888" },
+  inputDisabled: { backgroundColor: "#e0e0e0", color: "#030000ff" },
   buttonWrapper: { marginTop: 24 },
 });
