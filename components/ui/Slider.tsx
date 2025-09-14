@@ -97,6 +97,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: 'Sora',
-    fontSize: 14,
+    fontSize: 12,
   },
 });
