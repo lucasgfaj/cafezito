@@ -1,5 +1,13 @@
-import { Stack } from 'expo-router';
+import { Stack } from "expo-router";
 
-export default function Layout() {
-  return <Stack screenOptions={{ headerShown: false }} />;
+export default function CoffeLayout() {
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      {/* Tela principal da aba */}
+      <Stack.Screen name="index" />
+
+      {/* Tela de detalhes, fora da TabBar */}
+      <Stack.Screen name="[details]" />
+    </Stack>
+  );
 }

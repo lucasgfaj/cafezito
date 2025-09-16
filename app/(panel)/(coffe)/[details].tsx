@@ -1,13 +1,12 @@
-import { View, Text } from 'react-native';
-import React from 'react';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from "expo-router";
+import { View, Text } from "react-native";
 
 export default function CoffeeDetailsScreen() {
-  const { id } = useLocalSearchParams();
+  const { details } = useLocalSearchParams();
 
   return (
     <View>
-      <Text>Coffee Details for ID: {id}</Text>
+      <Text>Coffee Details for ID: {details}</Text>
     </View>
   );
 }
