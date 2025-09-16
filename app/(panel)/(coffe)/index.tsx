@@ -2,7 +2,7 @@ import HomeBar from '@/components/Panel/Home';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-const Home = () => {
+const Index = () => {
   return (
     <View style={styles.container}>
       <HomeBar/>
@@ -16,4 +16,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Home;
+export default Index;

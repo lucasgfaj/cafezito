@@ -35,7 +35,7 @@ const SignInScreen = () => {
 
     // Se chegou aqui, logou com sucesso
     if (data?.session) {
-      router.push('/(panel)/home');
+      router.push('//(coffee)/index');
     }
 
   } catch (e: any) {

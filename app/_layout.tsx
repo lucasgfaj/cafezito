@@ -32,7 +32,7 @@ function RootLayoutInner() {
     const inPublicRoute = segments[0] !== "(panel)";
 
     if (token && inPublicRoute) {
-      router.replace("/(panel)/home");
+      router.replace("/(panel)/(coffe)");
     } else if (!token && !inPublicRoute) {
       router.replace("/");
     }
