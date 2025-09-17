@@ -2,12 +2,15 @@ import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-  Alert,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 
@@ -22,11 +25,17 @@ export default function AccountBar() {
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
   const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
 
   const [isEditing, setIsEditing] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
 
   return (
+     <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.content}
@@ -51,18 +60,38 @@ export default function AccountBar() {
 
         <Text style={[styles.label, { marginTop: 24 }]}>Email</Text>
         <TextInput
-          style={[styles.input, styles.inputDisabled]}
+          style={[styles.input, !isEditing && styles.inputDisabled]}
           value={email}
-          editable={false}
+          editable={isEditing}
           autoCapitalize="none"
           autoCorrect={false}
         />
 
+           <Text style={[styles.label, { marginTop: 24 }]}>Address</Text>
+        <TextInput
+         style={[styles.input, !isEditing && styles.inputDisabled]}
+          value={address}
+          editable={isEditing}
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
+
+
+   <Text style={[styles.label, { marginTop: 24 }]}>Phone</Text>
+        <TextInput
+       style={[styles.input, !isEditing && styles.inputDisabled]}
+          value={phone}
+          editable={isEditing}
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
+
+
           <Text style={[styles.label, { marginTop: 24 }]}>Password</Text>
         <TextInput
-          style={[styles.input, styles.inputDisabled]}
+         style={[styles.input, !isEditing && styles.inputDisabled]}
           value={password}
-          editable={false}
+          editable={isEditing}
           autoCapitalize="none"
           autoCorrect={false}
         />
@@ -75,9 +104,9 @@ export default function AccountBar() {
               height={50}
               borderRadius={12}
               icon="save"
-              backgroundColor="#4CAF50"
+              backgroundColor="#C67C4E"
               onPress={() => {}}
-              text={loadingSave ? "Salvando..." : "Salvar Nome"}
+              text={loadingSave ? "Saving..." : "Save Changes"}
             />
           </View>
         )}
@@ -88,13 +117,15 @@ export default function AccountBar() {
             height={50}
             borderRadius={12}
             icon="log-out"
-            backgroundColor="#7B3F00"
+            backgroundColor="#C67C4E"
             onPress={() => {}}
-            text="Deslogar"
+            text="Sign-Out"
           />
         </View>
       </View>
     </ScrollView>
+    </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -122,6 +153,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 8,
     elevation: 3,
+    marginBottom: 80
   },
   label: {
     fontSize: 16,

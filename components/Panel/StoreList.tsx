@@ -18,8 +18,8 @@ export default function StoreList({ coffees, loading }: StoreListProps) {
   const router = useRouter();
 
   const handlePress = (coffeeId: string) => {
-    // router.push(`/(details)/detail?id=${coffeeId}`);
-    console.log('Coffee ID:', coffeeId);
+    router.push(`/(panel)/(coffe)/${coffeeId}`);
+
   };
 
   return (

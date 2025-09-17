@@ -6,7 +6,6 @@ export default function CoffeeDetailsScreen() {
 
   return (
     <View>
-      <Text>Coffee Details for ID: {details}</Text>
     </View>
   );
 }
