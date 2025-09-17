@@ -1,5 +1,3 @@
-import { products } from "@/mocks/products";
-import { addFavorite, isFavorite, removeFavorite } from "@/storage/favorites";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 
@@ -8,35 +6,82 @@ import Button from "../ui/Button";
 import CardImg from "../ui/CardImg";
 import Navigation from "../ui/Navigation";
 import Rating from "../ui/Rating";
+import { Coffe } from "@/types/coffeType";
+import { getCoffeeById } from "@/services/coffeService";
+import { currentUser } from "@/services/auth";
+import {
+  addFavorite,
+  getFavorite,
+  removeFavorite,
+} from "@/services/favoriteService";
+import { useUser } from "@supabase/auth-helpers-react";
 
-export default function Detail() {
+export default function DetailBar() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
-  const product = products.find((item) => item.id === id);
-
-  const handleBack = () => router.back();
+  const [coffee, setCoffe] = useState<Coffe | null>(null);
+  const [loading, setLoading] = useState(true);
   const [favorite, setFavorite] = useState(false);
+  const [user, setUser] = useState<any>();
 
   useEffect(() => {
-    if (product) {
-      isFavorite(product.id).then(setFavorite);
+  async function loadUser() {
+    const u = await currentUser();
+    setUser(u);
+  }
+
+  loadUser(); // chamando a função async dentro do useEffect
+}, []);
+
+
+  console.log(id);
+  console.log(user?.id)
+  useEffect(() => {
+    async function fetchCoffee() {
+      if (!id || !user) return;
+
+      setLoading(true);
+
+      const data = await getCoffeeById(id as string);
+      setCoffe(data);
+
+      if (data) {
+        const fav = await getFavorite(user.id, data.id);
+        setFavorite(!!fav);
+      }
+
+      setLoading(false);
     }
-  }, [product]);
+
+    fetchCoffee();
+  }, [id, user]);
+
+  const handleBack = () => router.back();
 
   const handleRightIconPress = async () => {
-    if (!product) return;
+    if (!coffee || !user) return;
+
     if (favorite) {
-      await removeFavorite(product.id);
+      await removeFavorite(user.id, coffee.id);
+      setFavorite(false);
     } else {
-      await addFavorite({ ...product, votes: product.votes ?? 0 });
+      await addFavorite(user.id, coffee.id);
+      setFavorite(true);
     }
-    setFavorite(!favorite);
   };
 
-  if (!product) {
+  if (loading) {
     return (
       <View style={styles.container}>
-        <Text>Product is not found</Text>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+
+  if (!coffee) {
+    return (
+      <View style={styles.container}>
+        <Text>Coffe not found</Text>
       </View>
     );
   }
@@ -52,26 +97,26 @@ export default function Detail() {
       />
 
       <CardImg
-        image={product.image}
-        width={355}
+        image={{uri: coffee.image_url}}
+        width={320}
         height={250}
         borderRadius={16}
       />
 
       <View style={styles.header}>
         <View>
-          <Text style={styles.title}>{product.title}</Text>
-          <Text style={styles.subtitle}>{product.subtitle}</Text>
+          <Text style={styles.title}>{coffee.name}</Text>
+          <Text style={styles.subtitle}>{coffee.description}</Text>
         </View>
       </View>
       <Text style={styles.rating}>
-        <Rating value={product.rating} votes={product.votes} />
+        <Rating value={coffee.rating} votes={coffee.votes} />
       </Text>
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Description</Text>
         <Text style={styles.description}>
-          {product.description} <Text style={styles.readMore}>Read More</Text>
+          {coffee.description} <Text style={styles.readMore}>Read More</Text>
         </Text>
       </View>
 
@@ -94,11 +139,11 @@ export default function Detail() {
       </View>
 
       <View style={styles.priceContainer}>
-        <Text style={styles.price}>${product.price}</Text>
+        <Text style={styles.price}>${coffee.price}</Text>
         <Button
           text="Buy Now"
           backgroundColor="#C67C4E"
-          onPress={() => router.push(`/order?id=${product.id}`)}
+          onPress={() => router.push(`/order?id=${coffee.id}`)}
           style={styles.buyButton}
         />
       </View>
@@ -185,6 +230,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    marginBottom: 80,
   },
   price: {
     color: "#C67C4E",

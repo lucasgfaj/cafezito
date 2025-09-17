@@ -7,7 +7,7 @@ export default function CoffeLayout() {
       <Stack.Screen name="index" />
 
       {/* Tela de detalhes, fora da TabBar */}
-      <Stack.Screen name="[details]" />
+      <Stack.Screen name="[id]" />
     </Stack>
   );
 }

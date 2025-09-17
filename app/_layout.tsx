@@ -4,7 +4,7 @@ import * as Font from "expo-font";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import TokenContextProvider, { useTokenContext } from "@/context/useContext";
-
+import "expo-router/entry"
 SplashScreen.preventAutoHideAsync();
 
 function RootLayoutInner() {

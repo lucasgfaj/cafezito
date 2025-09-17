@@ -7,7 +7,7 @@ export default function TabLayout() {
   const insets = useSafeAreaInsets();
   const segments = useSegments();
 
-  const hideTabBar = (segments as string[]).includes('(coffe)') && (segments as string[]).includes('[details]');
+  const hideTabBar = (segments as string[]).includes('(coffe)') && (segments as string[]).includes('[id]');
 
   return (
     <Tabs
