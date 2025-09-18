@@ -27,16 +27,16 @@ function RootLayoutInner() {
   }, []);
 
   useEffect(() => {
-    if (!fontsLoaded || isLoading) return;
+  if (!fontsLoaded || isLoading) return;
 
-    const inPublicRoute = segments[0] !== "(panel)";
+  const inPanelRoute = segments[0] === "(panel)";
 
-    if (token && inPublicRoute) {
-      router.replace("/(panel)/(coffe)");
-    } else if (!token && !inPublicRoute) {
-      router.replace("/");
-    }
-  }, [segments, token, isLoading, fontsLoaded]);
+  if (!token && inPanelRoute) {
+    router.replace("/");
+  } else if (token && !inPanelRoute) {
+    router.replace("/(panel)/(coffe)");
+  }
+}, [token, isLoading, fontsLoaded]);
 
   if (isLoading || !fontsLoaded) {
     return (
@@ -59,7 +59,11 @@ function RootLayoutInner() {
         headerShown: false,
       }}
     >
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="signIn" options={{ headerShown: false }} />
+      <Stack.Screen name="signUp" options={{ headerShown: false }} />     ]
       <Stack.Screen name="(panel)" options={{ headerShown: false }} />
+
     </Stack>
   );
 }

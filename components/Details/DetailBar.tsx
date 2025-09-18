@@ -14,7 +14,6 @@ import {
   getFavorite,
   removeFavorite,
 } from "@/services/favoriteService";
-import { useUser } from "@supabase/auth-helpers-react";
 
 export default function DetailBar() {
   const { id } = useLocalSearchParams();
@@ -25,17 +24,14 @@ export default function DetailBar() {
   const [user, setUser] = useState<any>();
 
   useEffect(() => {
-  async function loadUser() {
-    const u = await currentUser();
-    setUser(u);
-  }
+    async function loadUser() {
+      const u = await currentUser();
+      setUser(u);
+    }
 
-  loadUser(); // chamando a função async dentro do useEffect
-}, []);
+    loadUser();
+  }, []);
 
-
-  console.log(id);
-  console.log(user?.id)
   useEffect(() => {
     async function fetchCoffee() {
       if (!id || !user) return;
@@ -97,7 +93,7 @@ export default function DetailBar() {
       />
 
       <CardImg
-        image={{uri: coffee.image_url}}
+        image={{ uri: coffee.image_url }}
         width={320}
         height={250}
         borderRadius={16}
