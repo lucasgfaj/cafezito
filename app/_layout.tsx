@@ -4,7 +4,8 @@ import * as Font from "expo-font";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import TokenContextProvider, { useTokenContext } from "@/context/useContext";
-import "expo-router/entry"
+import "expo-router/entry";
+
 SplashScreen.preventAutoHideAsync();
 
 function RootLayoutInner() {
@@ -27,16 +28,16 @@ function RootLayoutInner() {
   }, []);
 
   useEffect(() => {
-  if (!fontsLoaded || isLoading) return;
+    if (!fontsLoaded || isLoading) return;
 
-  const inPanelRoute = segments[0] === "(panel)";
+    const inPanelRoute = segments[0] === "(panel)";
 
-  if (!token && inPanelRoute) {
-    router.replace("/");
-  } else if (token && !inPanelRoute) {
-    router.replace("/(panel)/(coffe)");
-  }
-}, [token, isLoading, fontsLoaded]);
+    if (!token && inPanelRoute) {
+      router.replace("/");
+    } else if (token && !inPanelRoute) {
+      router.replace("/(panel)/(coffe)");
+    }
+  }, [token, isLoading, fontsLoaded]);
 
   if (isLoading || !fontsLoaded) {
     return (
@@ -58,13 +59,7 @@ function RootLayoutInner() {
       screenOptions={{
         headerShown: false,
       }}
-    >
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="signIn" options={{ headerShown: false }} />
-      <Stack.Screen name="signUp" options={{ headerShown: false }} />     ]
-      <Stack.Screen name="(panel)" options={{ headerShown: false }} />
-
-    </Stack>
+    />
   );
 }
 
