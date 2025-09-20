@@ -8,104 +8,119 @@ import {
   TextInput,
   View,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  ScrollView,
+  Keyboard,
 } from "react-native";
 import Button from "./ui/Button";
 import { supabase } from "@/lib/supabase";
 import { useState } from "react";
-
 
 const SignInScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
- async function signInWithEmail() {
-  try {
-    setLoading(true);
+  async function signInWithEmail() {
+    try {
+      setLoading(true);
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    if (error) {
-      Alert.alert("Erro", error.message);
-      return;
+      if (error) {
+        Alert.alert("Erro", error.message);
+        return;
+      }
+
+      // Se chegou aqui, logou com sucesso
+      if (data?.session) {
+        router.push("/(panel)");
+      }
+    } catch (e: any) {
+      Alert.alert("Erro inesperado", e.message);
+    } finally {
+      setLoading(false);
     }
-
-    // Se chegou aqui, logou com sucesso
-    if (data?.session) {
-      router.push('/(panel)/home');
-    }
-
-  } catch (e: any) {
-    Alert.alert("Erro inesperado", e.message);
-  } finally {
-    setLoading(false);
   }
-}
-
   return (
     <ImageBackground
       source={require("@/assets/images/background/background.png")}
       style={styles.background}
       resizeMode="cover"
     >
-      <View style={styles.overlay}>
-        <View style={styles.card}>
-          <View style={styles.logoView}>
-            <Image
-              source={require("@/assets/images/background/logo.png")}
-              style={styles.logo}
-              resizeMode="contain"
-            />
-            <Text style={styles.title}>Cafezito</Text>
-          </View>
-          <Text style={styles.subtitle}>Log-In</Text>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1}}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+             contentContainerStyle={{ flexGrow: 1 }}
+          >
+            <View style={styles.overlay}>
+              <View style={styles.card}>
+                <View style={styles.logoView}>
+                  <Image
+                    source={require("@/assets/images/background/logo.png")}
+                    style={styles.logo}
+                    resizeMode="contain"
+                  />
+                  <Text style={styles.title}>Cafezito</Text>
+                </View>
+                <Text style={styles.subtitle}>Log-In</Text>
 
-          <TextInput
-            placeholder="E-mail"
-            placeholderTextColor="#aaa"
-            style={styles.input}
-            keyboardType="email-address"
-            autoCapitalize={"none"}
-            secureTextEntry={true}
-            onChangeText={(text) => setEmail(text)}
-            value={email}
-          />
+                <TextInput
+                  placeholder="E-mail"
+                  placeholderTextColor="#aaa"
+                  style={styles.input}
+                  keyboardType="email-address"
+                  autoCapitalize={"none"}
+                  secureTextEntry={true}
+                  onChangeText={(text) => setEmail(text)}
+                  value={email}
+                />
 
-          <TextInput
-            placeholder="Enter password"
-            placeholderTextColor="#aaa"
-            secureTextEntry
-            style={styles.input}
-            onChangeText={(text) => setPassword(text)}
-            value={password}
-            autoCapitalize={"none"}
-          />
+                <TextInput
+                  placeholder="Enter password"
+                  placeholderTextColor="#aaa"
+                  secureTextEntry
+                  style={styles.input}
+                  onChangeText={(text) => setPassword(text)}
+                  value={password}
+                  autoCapitalize={"none"}
+                />
 
-          <Button
-            disabled={loading}
-            onPress={() => signInWithEmail()}
-            text={"Sign-In"}
-            style={styles.SignInButton}
-          />
+                <Button
+                  disabled={loading}
+                  onPress={() => signInWithEmail()}
+                  text={"Sign-In"}
+                  style={styles.SignInButton}
+                />
 
-          <Text style={styles.footerText}>
-            Not registered yet?{" "}
-            <Text
-              onPress={() => router.push("/signUp")}
-              style={styles.SignUpText}
-            >
-              Sign-Up
-            </Text>
-          </Text>
-        </View>
-      </View>
+                <Text style={styles.footerText}>
+                  Not registered yet?{" "}
+                  <Text
+                    onPress={() => router.push("/signUp")}
+                    style={styles.SignUpText}
+                  >
+                    Sign-Up
+                  </Text>
+                </Text>
+              </View>
+            </View>
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </ImageBackground>
   );
 };
 const styles = StyleSheet.create({
+
   background: {
     flex: 1,
     width: "100%",

@@ -4,6 +4,7 @@ import * as Font from "expo-font";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import TokenContextProvider, { useTokenContext } from "@/context/useContext";
+import "expo-router/entry";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -29,14 +30,14 @@ function RootLayoutInner() {
   useEffect(() => {
     if (!fontsLoaded || isLoading) return;
 
-    const inPublicRoute = segments[0] !== "(panel)";
+    const inPanelRoute = segments[0] === "(panel)";
 
-    if (token && inPublicRoute) {
-      router.replace("/(panel)/home");
-    } else if (!token && !inPublicRoute) {
+    if (!token && inPanelRoute) {
       router.replace("/");
+    } else if (token && !inPanelRoute) {
+      router.replace("/(panel)/(coffe)");
     }
-  }, [segments, token, isLoading, fontsLoaded]);
+  }, [token, isLoading, fontsLoaded]);
 
   if (isLoading || !fontsLoaded) {
     return (
@@ -58,9 +59,7 @@ function RootLayoutInner() {
       screenOptions={{
         headerShown: false,
       }}
-    >
-      <Stack.Screen name="(panel)" options={{ headerShown: false }} />
-    </Stack>
+    />
   );
 }
 

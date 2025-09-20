@@ -1,10 +1,13 @@
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { Tabs } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Platform } from 'react-native';
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { Tabs, useSegments } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Platform } from "react-native";
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
+  const segments = useSegments();
+
+  const hideTabBar = (segments as string[]).includes('(coffe)') && (segments as string[]).includes('[id]');
 
   return (
     <Tabs
@@ -12,27 +15,29 @@ export default function TabLayout() {
         tabBarActiveTintColor: "#C67C4E",
         tabBarShowLabel: false,
         tabBarHideOnKeyboard: true,
-        tabBarStyle: {
-          position: 'absolute',
-          left: 20,
-          right: 20,
-          bottom: insets.bottom + (Platform.OS === 'android' ? 10 : 0), 
-          height: 60,
-          backgroundColor: "rgba(255, 255, 255, 0.95)",
-          borderRadius: 30,
-          borderTopWidth: 0,
-          elevation: 5,
-          shadowColor: "#000", 
-          shadowOffset: { width: 0, height: 5 },
-          shadowOpacity: 0.1,
-          shadowRadius: 10,
-          paddingBottom: Platform.OS === 'android' ? 10 : 15,
-          paddingTop: 10,
-        },
+        tabBarStyle: hideTabBar
+          ? { display: "none" }
+          : {
+              position: "absolute",
+              left: 20,
+              right: 20,
+              bottom: insets.bottom + (Platform.OS === "android" ? 10 : 0),
+              height: 60,
+              backgroundColor: "rgba(255, 255, 255, 0.95)",
+              borderRadius: 30,
+              borderTopWidth: 0,
+              elevation: 5,
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: 5 },
+              shadowOpacity: 0.1,
+              shadowRadius: 10,
+              paddingBottom: Platform.OS === "android" ? 10 : 15,
+              paddingTop: 10,
+            },
       }}
     >
       <Tabs.Screen
-        name="home"
+        name="(coffe)"
         options={{
           headerShown: false,
           tabBarIcon: ({ color }) => (
@@ -49,8 +54,7 @@ export default function TabLayout() {
           ),
         }}
       />
-      
-       <Tabs.Screen
+      <Tabs.Screen
         name="cart"
         options={{
           headerShown: false,
@@ -59,8 +63,7 @@ export default function TabLayout() {
           ),
         }}
       />
-
-        <Tabs.Screen
+      <Tabs.Screen
         name="orders"
         options={{
           headerShown: false,
@@ -69,7 +72,6 @@ export default function TabLayout() {
           ),
         }}
       />
-
       <Tabs.Screen
         name="account"
         options={{
@@ -79,8 +81,6 @@ export default function TabLayout() {
           ),
         }}
       />
-
-       
     </Tabs>
   );
 }

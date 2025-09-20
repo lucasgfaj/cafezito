@@ -1,100 +1,131 @@
 import { Feather } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
 import {
-  Alert,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
-
 import Button from "@/components/ui/Button";
-import { useTokenContext } from "@/context/useContext";
+import { useState } from "react";
+import { useUserProfile } from "@/hooks/useUserProfile";
 
 export default function AccountBar() {
-  const { token, userId, setToken, setUserId } = useTokenContext();
-  const router = useRouter();
-
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [address, setAddress] = useState("");
-  const [password, setPassword] = useState("");
+  const {
+    profile,
+    setProfile,
+    password,
+    setPassword,
+    loading,
+    updateProfile,
+    logout,
+  } = useUserProfile();
 
   const [isEditing, setIsEditing] = useState(false);
-  const [loadingSave, setLoadingSave] = useState(false);
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.content}
-      showsVerticalScrollIndicator={false}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Profile</Text>
-        <TouchableOpacity onPress={() => setIsEditing(!isEditing)}>
-          <Feather name={isEditing ? "x" : "edit"} size={24} color="#fff" />
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.card}>
-        <Text style={styles.label}>Nome</Text>
-        <TextInput
-          style={[styles.input, !isEditing && styles.inputDisabled]}
-          value={name}
-          onChangeText={setName}
-          editable={isEditing}
-          autoCapitalize="words"
-        />
-
-        <Text style={[styles.label, { marginTop: 24 }]}>Email</Text>
-        <TextInput
-          style={[styles.input, styles.inputDisabled]}
-          value={email}
-          editable={false}
-          autoCapitalize="none"
-          autoCorrect={false}
-        />
-
-          <Text style={[styles.label, { marginTop: 24 }]}>Password</Text>
-        <TextInput
-          style={[styles.input, styles.inputDisabled]}
-          value={password}
-          editable={false}
-          autoCapitalize="none"
-          autoCorrect={false}
-        />
-
-
-        {isEditing && (
-          <View style={styles.buttonWrapper}>
-            <Button
-              width="100%"
-              height={50}
-              borderRadius={12}
-              icon="save"
-              backgroundColor="#4CAF50"
-              onPress={() => {}}
-              text={loadingSave ? "Salvando..." : "Salvar Nome"}
-            />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={styles.content}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.header}>
+            <Text style={styles.headerText}>Profile</Text>
+            <TouchableOpacity onPress={() => setIsEditing(!isEditing)}>
+              <Feather name={isEditing ? "x" : "edit"} size={24} color="#fff" />
+            </TouchableOpacity>
           </View>
-        )}
 
-        <View style={styles.buttonWrapper}>
-          <Button
-            width="100%"
-            height={50}
-            borderRadius={12}
-            icon="log-out"
-            backgroundColor="#7B3F00"
-            onPress={() => {}}
-            text="Deslogar"
-          />
-        </View>
-      </View>
-    </ScrollView>
+          <View style={styles.card}>
+            <Text style={styles.label}>Nome</Text>
+            <TextInput
+              style={[styles.input, !isEditing && styles.inputDisabled]}
+              value={profile.name}
+              onChangeText={(t) => setProfile({ ...profile, name: t })}
+              editable={isEditing}
+              autoCapitalize="words"
+            />
+
+            <Text style={[styles.label, { marginTop: 24 }]}>Email</Text>
+            <TextInput
+              style={[styles.input, !isEditing && styles.inputDisabled]}
+              value={profile.email}
+              onChangeText={(t) => setProfile({ ...profile, email: t })}
+              editable={isEditing}
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
+
+            <Text style={[styles.label, { marginTop: 24 }]}>Address</Text>
+            <TextInput
+              style={[styles.input, !isEditing && styles.inputDisabled]}
+              value={profile.address}
+              onChangeText={(t) => setProfile({ ...profile, address: t })}
+              editable={isEditing}
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
+
+            <Text style={[styles.label, { marginTop: 24 }]}>Phone</Text>
+            <TextInput
+              style={[styles.input, !isEditing && styles.inputDisabled]}
+              value={profile.phone}
+              onChangeText={(t) => setProfile({ ...profile, phone: t })}
+              editable={isEditing}
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
+
+            <Text style={[styles.label, { marginTop: 24 }]}>Password</Text>
+            <TextInput
+              style={[styles.input, !isEditing && styles.inputDisabled]}
+              value={password}
+              onChangeText={setPassword}
+              editable={isEditing}
+              autoCapitalize="none"
+              autoCorrect={false}
+              secureTextEntry
+            />
+
+            {isEditing && (
+              <View style={styles.buttonWrapper}>
+                <Button
+                  width="100%"
+                  height={50}
+                  borderRadius={12}
+                  icon="save"
+                  backgroundColor="#C67C4E"
+                  onPress={updateProfile}
+                  text={loading ? "Saving..." : "Save Changes"}
+                />
+              </View>
+            )}
+
+            <View style={styles.buttonWrapper}>
+              <Button
+                width="100%"
+                height={50}
+                borderRadius={12}
+                icon="log-out"
+                backgroundColor="#C67C4E"
+                onPress={logout}
+                text="Sign-Out"
+              />
+            </View>
+          </View>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -122,6 +153,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 8,
     elevation: 3,
+    marginBottom: 120,
   },
   label: {
     fontSize: 16,

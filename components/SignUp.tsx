@@ -9,6 +9,11 @@ import {
   View,
   AppState,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  ScrollView,
+  Keyboard,
 } from "react-native";
 import Button from "./ui/Button";
 import { supabase } from "@/lib/supabase";
@@ -79,13 +84,21 @@ const SignUpScreen = () => {
     /*if (!session) Alert.alert("Check your email for the login link!");
     setLoading(false);*/
   }
-
   return (
     <ImageBackground
       source={require("@/assets/images/background/background.png")}
       style={styles.background}
       resizeMode="cover"
     >
+       <KeyboardAvoidingView
+              behavior={Platform.OS === "ios" ? "padding" : "height"}
+              style={{ flex: 1}}
+            >
+              <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <ScrollView
+                  showsVerticalScrollIndicator={false}
+                   contentContainerStyle={{ flexGrow: 1 }}
+                >
       <View style={styles.overlay}>
         <View style={styles.card}>
           <View style={styles.logoView}>
@@ -176,6 +189,9 @@ const SignUpScreen = () => {
           </Text>
         </View>
       </View>
+          </ScrollView>
+          </TouchableWithoutFeedback>
+            </KeyboardAvoidingView>
     </ImageBackground>
   );
 };
