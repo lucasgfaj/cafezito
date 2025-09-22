@@ -5,6 +5,10 @@ import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import TokenContextProvider, { useTokenContext } from "@/context/useContext";
 import "expo-router/entry";
+import {
+  ActionSheetProvider,
+  useActionSheet,
+} from "@expo/react-native-action-sheet";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -65,8 +69,10 @@ function RootLayoutInner() {
 
 export default function RootLayout() {
   return (
-    <TokenContextProvider>
-      <RootLayoutInner />
-    </TokenContextProvider>
+    <ActionSheetProvider>
+      <TokenContextProvider>
+        <RootLayoutInner />
+      </TokenContextProvider>
+    </ActionSheetProvider>
   );
 }

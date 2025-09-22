@@ -52,7 +52,13 @@ export default function DetailBar() {
     fetchCoffee();
   }, [id, user]);
 
-  const handleBack = () => router.back();
+  const handleBack = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.push("/");
+    }
+  };
 
   const handleRightIconPress = async () => {
     if (!coffee || !user) return;
@@ -121,7 +127,7 @@ export default function DetailBar() {
         <View style={styles.sizes}>
           {["S", "M", "L"].map((size) => (
             <Pressable
-              key={size}
+              key={size} // ✅ chave única
               style={size === "M" ? styles.sizeActive : styles.size}
             >
               <Text
