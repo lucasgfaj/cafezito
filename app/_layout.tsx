@@ -9,6 +9,7 @@ import {
   ActionSheetProvider,
   useActionSheet,
 } from "@expo/react-native-action-sheet";
+import { CartProvider } from "@/context/useCartContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -71,7 +72,9 @@ export default function RootLayout() {
   return (
     <ActionSheetProvider>
       <TokenContextProvider>
+        <CartProvider>
         <RootLayoutInner />
+        </CartProvider>
       </TokenContextProvider>
     </ActionSheetProvider>
   );

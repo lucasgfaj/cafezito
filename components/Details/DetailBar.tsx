@@ -1,6 +1,5 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { addToCart } from "@/services/cartService";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import Button from "../ui/Button";
 import CardImg from "../ui/CardImg";
@@ -14,6 +13,7 @@ import {
   getFavorite,
   removeFavorite,
 } from "@/services/favoriteService";
+import { useCart } from "@/context/useCartContext";
 
 export default function DetailBar() {
   const { id } = useLocalSearchParams();
@@ -22,6 +22,8 @@ export default function DetailBar() {
   const [loading, setLoading] = useState(true);
   const [favorite, setFavorite] = useState(false);
   const [user, setUser] = useState<any>();
+  const { addToCart } = useCart();
+
   useEffect(() => {
     async function loadUser() {
       const u = await currentUser();
@@ -126,7 +128,7 @@ export default function DetailBar() {
         <View style={styles.sizes}>
           {["S", "M", "L"].map((size) => (
             <Pressable
-              key={size} 
+              key={size}
               style={size === "M" ? styles.sizeActive : styles.size}
             >
               <Text
@@ -144,14 +146,12 @@ export default function DetailBar() {
 
         <Button
           text="Buy Now"
-          backgroundColor="#C67C4E"
           onPress={async () => {
             if (coffee) {
               await addToCart(coffee);
-              router.push(`/cart?id=${coffee.id}`);
+              router.push("/cart");
             }
           }}
-          style={styles.buyButton}
         />
       </View>
     </ScrollView>

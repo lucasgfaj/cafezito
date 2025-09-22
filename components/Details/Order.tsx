@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Alert,
   Image,
@@ -12,57 +12,15 @@ import {
 } from "react-native";
 import Button from "../ui/Button";
 import Navigation from "../ui/Navigation";
-import {
-  addToCart,
-  clearCart,
-  getCart,
-  removeFromCart,
-} from "@/services/cartService";
 import { useUserProfile } from "@/hooks/useUserProfile";
+import { useCart } from "@/context/useCartContext";
 
 export default function Order() {
   const router = useRouter();
-  const [cart, setCart] = useState<any[]>([]);
   const { profile } = useUserProfile();
 
-  useEffect(() => {
-    async function loadCart() {
-      const data = await getCart();
-      setCart(data || []);
-    }
-    loadCart();
-  }, []);
-
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const removeOne = async (productId: string) => {
-    setCart((prev) => {
-      const product = prev.find((p) => p.id === productId);
-      if (!product) return prev;
-
-      let updated;
-      if (product.quantity === 1) {
-        updated = prev.filter((p) => p.id !== productId);
-        removeFromCart(productId); // remove do AsyncStorage
-      } else {
-        updated = prev.map((p) =>
-          p.id === productId ? { ...p, quantity: p.quantity - 1 } : p
-        );
-      }
-
-      return updated;
-    });
-  };
-
-  const addOne = async (productId: string) => {
-    setCart((prev) => {
-      const updated = prev.map((p) =>
-        p.id === productId ? { ...p, quantity: p.quantity + 1 } : p
-      );
-      const product = updated.find((p) => p.id === productId);
-      if (product) addToCart(product); // adiciona/atualiza no storage
-      return updated;
-    });
-  };
+  const { cart, increaseQuantity, decreaseQuantity, clearCart, total } =
+    useCart();
 
   const clearCartHandler = () => {
     Alert.alert("Confirm", "Deseja esvaziar o carrinho?", [
@@ -70,20 +28,11 @@ export default function Order() {
       {
         text: "OK",
         onPress: async () => {
-          setCart([]); // limpa estado local
-          await clearCart(); // limpa AsyncStorage
+          await clearCart();
         },
       },
     ]);
   };
-
-  if (cart.length === 0) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.notFoundText}>Seu carrinho está vazio</Text>
-      </View>
-    );
-  }
 
   return (
     <ScrollView style={styles.container}>
@@ -130,32 +79,35 @@ export default function Order() {
           </TouchableOpacity>
         </View>
       </View>
+      {cart.length > 0 ? (
+        cart.map((product) => (
+          <View key={product.id} style={styles.productCard}>
+            <Image
+              source={{ uri: product.image_url }}
+              style={styles.productImage}
+            />
+            <View style={styles.productInfo}>
+              <Text style={styles.productName}>{product.name}</Text>
+              <Text style={styles.productSubtitle}>
+                {product.description || "No description"}
+              </Text>
+            </View>
+            <View style={styles.counter}>
+              <TouchableOpacity onPress={() => decreaseQuantity(product.id)}>
+                <Text style={{ fontSize: 18, paddingHorizontal: 8 }}>-</Text>
+              </TouchableOpacity>
 
-      {cart.map((product) => (
-        <View key={product.id} style={styles.productCard}>
-          <Image
-            source={{ uri: product.image_url }}
-            style={styles.productImage}
-          />
-          <View style={styles.productInfo}>
-            <Text style={styles.productName}>{product.name}</Text>
-            <Text style={styles.productSubtitle}>
-              {product.description || "No description"}
-            </Text>
+              <Text style={{ marginHorizontal: 8 }}>{product.quantity}</Text>
+
+              <TouchableOpacity onPress={() => increaseQuantity(product.id)}>
+                <Text style={{ fontSize: 18, paddingHorizontal: 8 }}>+</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-          <View style={styles.counter}>
-            <TouchableOpacity onPress={() => removeOne(product.id)}>
-              <Text style={{ fontSize: 18, paddingHorizontal: 8 }}>-</Text>
-            </TouchableOpacity>
-
-            <Text style={{ marginHorizontal: 8 }}>{product.quantity}</Text>
-
-            <TouchableOpacity onPress={() => addOne(product.id)}>
-              <Text style={{ fontSize: 18, paddingHorizontal: 8 }}>+</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      ))}
+        ))
+      ) : (
+        <Text style={styles.notFoundText}>No coffees available</Text>
+      )}
 
       <TouchableOpacity style={styles.discountCard}>
         <Ionicons name="pricetags-outline" size={16} color="#C67C4E" />
@@ -187,24 +139,16 @@ export default function Order() {
         text="Confirm Order"
         onPress={() => console.log("Pedido confirmado")}
         style={{ marginBottom: 160, marginTop: 24, width: "100%" }}
+        disabled={cart.length === 0}
       />
     </ScrollView>
   );
 }
+
 const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    backgroundColor: "#fff",
-  },
-  navigation: {
-    marginTop: 40,
-    marginBottom: 16,
-  },
-  notFoundText: {
-    textAlign: "center",
-    marginTop: 50,
-    color: "red",
-  },
+  container: { padding: 20, backgroundColor: "#fff" },
+  navigation: { marginTop: 40, marginBottom: 16 },
+  notFoundText: { textAlign: "center", padding: 12, color: "red" },
   toggleContainer: {
     flexDirection: "row",
     borderRadius: 10,
@@ -219,44 +163,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#f2f2f2",
   },
-  activeToggle: {
-    backgroundColor: "#C67C4E",
-  },
-  toggleText: {
-    color: "#333",
-  },
-  toggleTextActive: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-  section: {
-    marginBottom: 24,
-  },
-  sectionTitle: {
-    fontWeight: "bold",
-    fontSize: 16,
-    marginBottom: 8,
-  },
-  addressName: {
-    fontWeight: "bold",
-  },
-  addressDetail: {
-    color: "#888",
-    marginBottom: 12,
-  },
-  row: {
-    flexDirection: "row",
-    gap: 12,
-  },
-  actionButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-  },
-  actionText: {
-    color: "#C67C4E",
-    fontWeight: "500",
-  },
+  activeToggle: { backgroundColor: "#C67C4E" },
+  toggleText: { color: "#333" },
+  toggleTextActive: { color: "#fff", fontWeight: "bold" },
+  section: { marginBottom: 24 },
+  sectionTitle: { fontWeight: "bold", fontSize: 16, marginBottom: 8 },
+  addressDetail: { color: "#888", marginBottom: 12 },
+  row: { flexDirection: "row", gap: 12 },
+  actionButton: { flexDirection: "row", alignItems: "center", gap: 4 },
+  actionText: { color: "#C67C4E", fontWeight: "500" },
   productCard: {
     flexDirection: "row",
     backgroundColor: "#f8f8f8",
@@ -266,24 +181,11 @@ const styles = StyleSheet.create({
     gap: 12,
     marginBottom: 16,
   },
-  productImage: {
-    width: 48,
-    height: 48,
-    borderRadius: 8,
-  },
-  productInfo: {
-    flex: 1,
-  },
-  productName: {
-    fontWeight: "bold",
-  },
-  productSubtitle: {
-    color: "#888",
-  },
-  counter: {
-    flexDirection: "row",
-    gap: 8,
-  },
+  productImage: { width: 48, height: 48, borderRadius: 8 },
+  productInfo: { flex: 1 },
+  productName: { fontWeight: "bold" },
+  productSubtitle: { color: "#888" },
+  counter: { flexDirection: "row", gap: 8 },
   discountCard: {
     flexDirection: "row",
     alignItems: "center",
@@ -293,19 +195,13 @@ const styles = StyleSheet.create({
     gap: 8,
     marginBottom: 24,
   },
-  discountText: {
-    color: "#C67C4E",
-    fontWeight: "500",
-  },
+  discountText: { color: "#C67C4E", fontWeight: "500" },
   rowBetween: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 6,
   },
-  oldPrice: {
-    textDecorationLine: "line-through",
-    color: "#aaa",
-  },
+  oldPrice: { textDecorationLine: "line-through", color: "#aaa" },
   walletCard: {
     flexDirection: "row",
     alignItems: "center",
@@ -315,14 +211,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 24,
   },
-  walletText: {
-    flex: 1,
-    marginLeft: 8,
-    color: "#C67C4E",
-    fontWeight: "500",
-  },
-  walletAmount: {
-    fontWeight: "bold",
-    color: "#C67C4E",
-  },
+  walletText: { flex: 1, marginLeft: 8, color: "#C67C4E", fontWeight: "500" },
+  walletAmount: { fontWeight: "bold", color: "#C67C4E" },
 });
