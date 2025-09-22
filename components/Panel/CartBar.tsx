@@ -15,7 +15,7 @@ import Navigation from "../ui/Navigation";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { useCart } from "@/context/useCartContext";
 
-export default function Order() {
+export default function CartBar() {
   const router = useRouter();
   const { profile } = useUserProfile();
 

@@ -1,5 +1,6 @@
 import { Feather } from "@expo/vector-icons";
 import {
+  ActivityIndicator,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -24,16 +25,27 @@ export default function AccountBar() {
     loading,
     updateProfile,
     logout,
+    loadingProfile,
   } = useUserProfile();
 
   const [isEditing, setIsEditing] = useState(false);
+
+  // 🔹 Mostra loading enquanto o perfil está carregando
+  if (loadingProfile || !profile) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#C67C4E" />
+        <Text style={styles.loadingText}>Loading profile...</Text>
+      </View>
+    );
+  }
 
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <ScrollView
           style={styles.container}
           contentContainerStyle={styles.content}
@@ -133,6 +145,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#FAFAFA" },
   content: { alignItems: "center" },
   header: {
+    borderRadius: 18,
     backgroundColor: "#313131",
     paddingTop: 38,
     paddingBottom: 30,
@@ -153,7 +166,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 8,
     elevation: 3,
-    marginBottom: 120,
+    marginBottom: 140,
   },
   label: {
     fontSize: 16,
@@ -170,4 +183,15 @@ const styles = StyleSheet.create({
   },
   inputDisabled: { backgroundColor: "#e0e0e0", color: "#030000ff" },
   buttonWrapper: { marginTop: 24 },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#FAFAFA",
+  },
+  loadingText: {
+    marginTop: 12,
+    fontSize: 16,
+    color: "#444",
+  },
 });

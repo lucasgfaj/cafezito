@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import Order from '@/components/Details/Order';
+import CartBar from '@/components/Panel/CartBar';
 const Cart = () => {
     return (
         <View style={styles.container}>
-            <Order/>
+            <CartBar/>
         </View>
     );
 }
