@@ -8,4 +8,5 @@ export interface Coffe {
     image_url: any;
     votes: number;
     rating: number;
+    quantity?: number
 }
