@@ -145,7 +145,8 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#FAFAFA" },
   content: { alignItems: "center" },
   header: {
-    borderRadius: 18,
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
     backgroundColor: "#313131",
     paddingTop: 38,
     paddingBottom: 30,
