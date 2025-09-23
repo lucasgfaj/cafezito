@@ -1,45 +1,53 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Text, StyleSheet, View, ScrollView } from "react-native";
+import { getOrdersByUser, Order } from "@/services/orderService";
+import { currentUser } from "@/services/auth";
 
 const OrderBar = () => {
+  const [orders, setOrders] = useState<Order[]>([]);
+
+  useEffect(() => {
+    async function loadOrders() {
+      const user = await currentUser();
+      if (!user) return;
+
+      const data = await getOrdersByUser(user.id);
+      if (data) setOrders(data);
+    }
+
+    loadOrders();
+  }, []);
+
   return (
     <View style={{ flex: 1 }}>
-      {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerText}>Orders</Text>
       </View>
 
-      {/* Lista de pedidos rolável */}
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {/* Card de exemplo #1 */}
-        <View style={styles.card}>
-          <View style={styles.left}>
-            <Text style={styles.orderNumber}>#1</Text>
+        {orders.map((order) => (
+          <View style={styles.card} key={order.id}>
+            <View style={styles.left}>
+              <Text style={styles.orderNumber}>#{order.id.slice(0, 4)}</Text>
+            </View>
+            <View style={styles.center}>
+              <Text style={styles.orderName}>
+                {order.order_coffee
+                  .map(
+                    (oc) =>
+                      `${oc.coffees?.name ?? "Coffee"} x${oc.quantity}`
+                  )
+                  .join(", ")}
+              </Text>
+              <Text style={styles.orderDate}>
+                {new Date(order.order_date).toLocaleDateString()}
+              </Text>
+            </View>
+            <View style={styles.right}>
+              <Text style={styles.orderPrice}>${order.total.toFixed(2)}</Text>
+            </View>
           </View>
-          <View style={styles.center}>
-            <Text style={styles.orderName}>Caffe Mocha +1</Text>
-            <Text style={styles.orderDate}>01/01/2026</Text>
-          </View>
-          <View style={styles.right}>
-            <Text style={styles.orderPrice}>$4.53</Text>
-          </View>
-        </View>
-
-        {/* Card de exemplo #2 */}
-        <View style={styles.card}>
-          <View style={styles.left}>
-            <Text style={styles.orderNumber}>#2</Text>
-          </View>
-          <View style={styles.center}>
-            <Text style={styles.orderName}>Latte</Text>
-            <Text style={styles.orderDate}>02/01/2026</Text>
-          </View>
-          <View style={styles.right}>
-            <Text style={styles.orderPrice}>$3.80</Text>
-          </View>
-        </View>
-
-        {/* Você pode adicionar mais cards aqui */}
+        ))}
       </ScrollView>
     </View>
   );
