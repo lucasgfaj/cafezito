@@ -27,7 +27,7 @@ export default function Navigation({
 }: NavigationProps) {
   return (
     <View style={[styles.container, style]}>
-      <TouchableOpacity onPress={onBackPress} hitSlop={80}>
+      <TouchableOpacity onPress={onBackPress} hitSlop={100}>
         <Ionicons name={iconLeft} size={24} color="black" />
       </TouchableOpacity>
 

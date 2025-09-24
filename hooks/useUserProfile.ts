@@ -24,6 +24,7 @@ export function useUserProfile() {
 
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadingProfile, setLoadingProfile] = useState(true);
 
   // 🔹 Buscar dados ao iniciar
   useEffect(() => {
@@ -94,6 +95,39 @@ export function useUserProfile() {
     router.replace("/signIn");
   }
 
+   const fetchProfile = async () => {
+    setLoadingProfile(true);
+    try {
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError || !user) return;
+
+      const { data, error } = await supabase
+        .from("users")
+        .select("name, address, phone")
+        .eq("id", user.id)
+        .single();
+
+      if (!error && data) {
+        setProfile({
+          name: data.name || "",
+          email: user.email || "",
+          address: data.address || "",
+          phone: data.phone || "",
+        });
+      } else {
+        setProfile({ name: "", email: user.email || "", address: "", phone: "" });
+      }
+    } catch (err) {
+      console.log("Erro ao buscar perfil:", err);
+    } finally {
+      setLoadingProfile(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
   return {
     profile,
     setProfile,
@@ -102,5 +136,7 @@ export function useUserProfile() {
     loading,
     updateProfile,
     logout,
+    loadingProfile,
+    fetchProfile
   };
 }

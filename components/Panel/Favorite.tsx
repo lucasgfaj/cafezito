@@ -1,7 +1,9 @@
+import { getFavorites, removeFavorite } from "@/services/favoriteService";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect, useRouter } from "expo-router";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { Coffe } from "@/types/coffeType";
 import {
   FlatList,
   Image,
@@ -10,22 +12,45 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-
-import { Product } from "@/constants/Product";
-import { getFavorites, removeFavorite } from "@/storage/favorites";
+import { currentUser } from "@/services/auth";
+import { getCoffeeById } from "@/services/coffeService";
 
 export default function Favorite() {
-  const [data, setData] = useState<Product[]>([]);
+  const [data, setData] = useState<Coffe[]>([]);
   const { showActionSheetWithOptions } = useActionSheet();
   const router = useRouter();
+  const [user, setUser] = useState<any>(null);
 
-  useFocusEffect(
-    useCallback(() => {
-      getFavorites().then(setData);
-    }, [])
-  );
+  useEffect(() => {
+    async function loadUser() {
+      const u = await currentUser();
+      setUser(u);
+    }
+    loadUser();
+  }, []);
+
+useFocusEffect(
+  useCallback(() => {
+    if (!user) return;
+
+    async function loadFavorites() {
+      const favs = await getFavorites(user.id);
+      const favsWithCoffee = await Promise.all(
+        favs.map(async (f) => {
+          const coffee = await getCoffeeById(f.coffee_id);
+          return coffee;
+        })
+      );
+      setData(favsWithCoffee.filter((c): c is Coffe => !!c)); 
+    }
+
+    loadFavorites();
+  }, [user])
+);
+
 
   const onPress = (id: string) => {
+
     const options = ["Remove from Favorites", "View Product", "Cancel"];
     const destructiveButtonIndex = 0;
     const cancelButtonIndex = 2;
@@ -37,15 +62,16 @@ export default function Favorite() {
         destructiveButtonIndex,
       },
       async (selectedIndex) => {
+
         if (selectedIndex === undefined) return;
 
         switch (selectedIndex) {
           case 0:
-            await removeFavorite(id);
-            setData(await getFavorites());
+            await removeFavorite(user.id, id);
+            setData((await getFavorites(user.id)).filter((f) => !!f.id));
             break;
           case 1:
-            router.push(`/detail?id=${id}`);
+            router.push(`/(panel)/(coffe)/${id}`);
             break;
         }
       }
@@ -62,20 +88,23 @@ export default function Favorite() {
         data={data}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={() => router.push(`/order?id=${item.id}`)}
+            onPress={() => {
+              console.log("Navigating via card press to id:", item.id);
+              router.push(`/(panel)/(coffe)/${item.id}`);
+            }}
             style={styles.card}
             activeOpacity={0.8}
           >
-          <Image source={item.image} style={styles.image} />
-
+            <Image source={{ uri: item.image_url }} style={styles.image} />
             <View style={styles.cardDetails}>
-              <Text style={styles.title}>{item.title}</Text>
-              <Text style={styles.subtitle}>{item.subtitle}</Text>
+              <Text style={styles.title}>{item.name}</Text>
+              <Text style={styles.subtitle}>{item.type}</Text>
             </View>
             <TouchableOpacity
               style={styles.favorite}
               onPress={(e) => {
-                e.stopPropagation(); // evita que a navegação aconteça
+                e.stopPropagation();
+                console.log("Favorite pressed for id:", item.id);
                 onPress(item.id);
               }}
             >
@@ -83,7 +112,8 @@ export default function Favorite() {
             </TouchableOpacity>
           </TouchableOpacity>
         )}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id!} // garante que não é undefined
+        nestedScrollEnabled // se estiver dentro de ScrollView
         ListEmptyComponent={
           <Text style={styles.empty}>No favorite products found.</Text>
         }

@@ -3,23 +3,27 @@ import React from 'react';
 import { Dimensions, FlatList, StyleSheet, View } from 'react-native';
 import StoreCard from './StoreCard';
 import { Coffe } from '@/types/coffeType';
+import { useCart } from '@/context/useCartContext';
 
 const { width } = Dimensions.get('window');
 const CARD_GAP = 16;
-const CARD_WIDTH = (width - CARD_GAP * 3) / 2; // 2 cards por linha
+const CARD_WIDTH = (width - CARD_GAP * 3) / 2;
 
 interface StoreListProps {
   coffees: Coffe[];
   loading?: boolean;
 }
 
-
 export default function StoreList({ coffees, loading }: StoreListProps) {
   const router = useRouter();
+  const { addToCart } = useCart();
 
   const handlePress = (coffeeId: string) => {
     router.push(`/(panel)/(coffe)/${coffeeId}`);
+  };
 
+  const handleAddToCart = async (coffee: Coffe) => {
+    await addToCart(coffee); 
   };
 
   return (
@@ -38,7 +42,7 @@ export default function StoreList({ coffees, loading }: StoreListProps) {
             description={item.description}
             price={String(item.price)}
             rating={item.rating}
-            onPressAdd={() => console.log('Adicionado:', item.name)}
+            onPressAdd={() => handleAddToCart(item)}
             onPress={() => handlePress(item.id)}
           />
         </View>

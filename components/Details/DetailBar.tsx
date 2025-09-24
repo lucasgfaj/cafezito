@@ -1,6 +1,5 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import Button from "../ui/Button";
 import CardImg from "../ui/CardImg";
@@ -14,6 +13,7 @@ import {
   getFavorite,
   removeFavorite,
 } from "@/services/favoriteService";
+import { useCart } from "@/context/useCartContext";
 
 export default function DetailBar() {
   const { id } = useLocalSearchParams();
@@ -22,6 +22,7 @@ export default function DetailBar() {
   const [loading, setLoading] = useState(true);
   const [favorite, setFavorite] = useState(false);
   const [user, setUser] = useState<any>();
+  const { addToCart } = useCart();
 
   useEffect(() => {
     async function loadUser() {
@@ -52,7 +53,13 @@ export default function DetailBar() {
     fetchCoffee();
   }, [id, user]);
 
-  const handleBack = () => router.back();
+  const handleBack = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.push("/");
+    }
+  };
 
   const handleRightIconPress = async () => {
     if (!coffee || !user) return;
@@ -136,11 +143,15 @@ export default function DetailBar() {
 
       <View style={styles.priceContainer}>
         <Text style={styles.price}>${coffee.price}</Text>
+
         <Button
           text="Buy Now"
-          backgroundColor="#C67C4E"
-          onPress={() => router.push(`/order?id=${coffee.id}`)}
-          style={styles.buyButton}
+          onPress={async () => {
+            if (coffee) {
+              await addToCart(coffee);
+              router.push("/cart");
+            }
+          }}
         />
       </View>
     </ScrollView>

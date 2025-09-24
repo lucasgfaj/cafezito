@@ -5,6 +5,11 @@ import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import TokenContextProvider, { useTokenContext } from "@/context/useContext";
 import "expo-router/entry";
+import {
+  ActionSheetProvider,
+  useActionSheet,
+} from "@expo/react-native-action-sheet";
+import { CartProvider } from "@/context/useCartContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -65,8 +70,12 @@ function RootLayoutInner() {
 
 export default function RootLayout() {
   return (
-    <TokenContextProvider>
-      <RootLayoutInner />
-    </TokenContextProvider>
+    <ActionSheetProvider>
+      <TokenContextProvider>
+        <CartProvider>
+        <RootLayoutInner />
+        </CartProvider>
+      </TokenContextProvider>
+    </ActionSheetProvider>
   );
 }
