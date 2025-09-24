@@ -5,6 +5,7 @@ import { useTokenContext } from "@/context/useContext";
 import { useRouter } from "expo-router";
 
 type UserProfile = {
+  id: string;
   name: string;
   email: string;
   address: string;
@@ -16,6 +17,7 @@ export function useUserProfile() {
   const router = useRouter();
 
   const [profile, setProfile] = useState<UserProfile>({
+    id: "",
     name: "",
     email: "",
     address: "",
@@ -36,12 +38,13 @@ export function useUserProfile() {
 
       const { data, error } = await supabase
         .from("users")
-        .select("name, address, phone")
+        .select("name, address, phone, id")
         .eq("id", user.id)
         .single();
 
       if (!error && data) {
         setProfile({
+          id: data.id || "",
           name: data.name || "",
           email: user.email || "",
           address: data.address || "",
@@ -103,19 +106,20 @@ export function useUserProfile() {
 
       const { data, error } = await supabase
         .from("users")
-        .select("name, address, phone")
+        .select("name, address, phone, id")
         .eq("id", user.id)
         .single();
 
       if (!error && data) {
         setProfile({
+          id: data.id || "",
           name: data.name || "",
           email: user.email || "",
           address: data.address || "",
           phone: data.phone || "",
         });
       } else {
-        setProfile({ name: "", email: user.email || "", address: "", phone: "" });
+        setProfile({ id: "", name: "", email: user.email || "", address: "", phone: "" });
       }
     } catch (err) {
       console.log("Erro ao buscar perfil:", err);

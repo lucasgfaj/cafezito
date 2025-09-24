@@ -8,6 +8,8 @@ export default function TabLayout() {
   const segments = useSegments();
 
   const hideTabBar = (segments as string[]).includes('(coffe)') && (segments as string[]).includes('[id]');
+  const hideTabBarDelivery = (segments as string[]).includes('(cart)') && (segments as string[]).includes('[delivery]');
+
 
   return (
     <Tabs
@@ -15,7 +17,7 @@ export default function TabLayout() {
         tabBarActiveTintColor: "#C67C4E",
         tabBarShowLabel: false,
         tabBarHideOnKeyboard: true,
-        tabBarStyle: hideTabBar
+        tabBarStyle: hideTabBar &&  hideTabBarDelivery
           ? { display: "none" }
           : {
               position: "absolute",
@@ -55,7 +57,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="cart"
+        name="(cart)"
         options={{
           headerShown: false,
           tabBarIcon: ({ color }) => (

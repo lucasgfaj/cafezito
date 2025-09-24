@@ -1,25 +1,17 @@
 // Delivery.tsx
-import { products } from "@/mocks/products";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Navigation from "../ui/Navigation";
+import { useUserProfile } from "@/hooks/useUserProfile";
 export default function Delivery() {
-  const { id } = useLocalSearchParams();
-  const product = products.find((item) => item.id === id);
 
+  const { delivery } = useLocalSearchParams();
   const handleBack = () => router.back();
   const handleRightIconPress = () => console.log("Local");
-
-  if (!product) {
-    return (
-      <View style={styles.centered}>
-        <Text>Produto não encontrado</Text>
-      </View>
-    );
-  }
-
+  const profile = useUserProfile();
+ 
   return (
     <View style={styles.container}>
       <Navigation

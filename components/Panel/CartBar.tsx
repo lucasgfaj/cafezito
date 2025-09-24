@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React from "react";
+import React, { useState } from "react";
 import {
   Alert,
   Image,
@@ -14,16 +14,17 @@ import Button from "../ui/Button";
 import Navigation from "../ui/Navigation";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { useCart } from "@/context/useCartContext";
+import { addOrder } from "@/services/orderService";
 
 export default function CartBar() {
   const router = useRouter();
   const { profile } = useUserProfile();
-
+  const [loading, setLoading] = useState(false);
   const { cart, increaseQuantity, decreaseQuantity, clearCart, total } =
     useCart();
 
   const clearCartHandler = () => {
-    Alert.alert("Confirm", "Deseja esvaziar o carrinho?", [
+    Alert.alert("Confirm", "Clear cart?", [
       { text: "Cancel" },
       {
         text: "OK",
@@ -136,10 +137,33 @@ export default function CartBar() {
       </View>
 
       <Button
-        text="Confirm Order"
-        onPress={() => console.log("Pedido confirmado")}
+        text={loading ? "Processing..." : "Confirm Order"}
+        onPress={async () => {
+          if (!profile.id || cart.length === 0) return;
+
+          setLoading(true);
+          const order = await addOrder({
+            user_id: profile.id,
+            coffees: cart.map((item) => ({
+              coffee_id: item.id,
+              quantity: item.quantity,
+              unit_price: item.price,
+            })),
+          });
+
+          if (order) {
+            await clearCart();
+            router.push({
+              pathname: "/(panel)/(cart)/[delivery]",
+              params: { delivery: order.id },
+            });
+          } else {
+            Alert.alert("Error", "Could not place order. Try again.");
+          }
+          setLoading(false);
+        }}
+        disabled={loading || cart.length === 0}
         style={{ marginBottom: 160, marginTop: 24, width: "100%" }}
-        disabled={cart.length === 0}
       />
     </ScrollView>
   );
