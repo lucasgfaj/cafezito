@@ -1945,6 +1945,11 @@
   dependencies:
     "@babel/types" "^7.28.2"
 
+"@types/geojson@^7946.0.13":
+  version "7946.0.16"
+  resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-7946.0.16.tgz#8ebe53d69efada7044454e3305c19017d97ced2a"
+  integrity sha512-6C8nqWur3j98U6+lXDfTUWIfgvZU+EumvpHKcYjujKH7woYyLj2sUmff0tRhrqM7BohUw7Pz3ZB1jj2gW9Fvmg==
+
 "@types/graceful-fs@^4.1.3":
   version "4.1.9"
   resolved "https://registry.yarnpkg.com/@types/graceful-fs/-/graceful-fs-4.1.9.tgz#2a06bc0f68a20ab37b3e36aa238be6abdf49e8b4"
@@ -3195,6 +3200,11 @@ expo-linking@~8.0.8:
   dependencies:
     expo-constants "~18.0.8"
     invariant "^2.2.4"
+
+expo-maps@~0.12.7:
+  version "0.12.7"
+  resolved "https://registry.yarnpkg.com/expo-maps/-/expo-maps-0.12.7.tgz#f1552e0336d693ce73f0124fd2d9ee2208c7cac1"
+  integrity sha512-u1OjR2PwAsTrM0XXwhdZMOuErxgX5s2V9G/QsOuhboWnO6k6flmiixLJiT2pbh2k+waHS0S/upqI7ZAR9CJwhA==
 
 expo-modules-autolinking@3.0.11:
   version "3.0.11"
@@ -5313,6 +5323,13 @@ react-native-is-edge-to-edge@^1.1.6, react-native-is-edge-to-edge@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/react-native-is-edge-to-edge/-/react-native-is-edge-to-edge-1.2.1.tgz#64e10851abd9d176cbf2b40562f751622bde3358"
   integrity sha512-FLbPWl/MyYQWz+KwqOZsSyj2JmLKglHatd3xLZWskXOpRaio4LfEDEz8E/A6uD8QoTHW6Aobw1jbEwK7KMgR7Q==
+
+react-native-maps@1.20.1:
+  version "1.20.1"
+  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-1.20.1.tgz#f613364886b2f72db56cafcd2bd7d3a35f470dfb"
+  integrity sha512-NZI3B5Z6kxAb8gzb2Wxzu/+P2SlFIg1waHGIpQmazDSCRkNoHNY4g96g+xS0QPSaG/9xRBbDNnd2f2/OW6t6LQ==
+  dependencies:
+    "@types/geojson" "^7946.0.13"
 
 react-native-reanimated@^4.1.0:
   version "4.1.0"
