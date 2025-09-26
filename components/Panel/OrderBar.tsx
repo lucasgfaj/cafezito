@@ -4,8 +4,8 @@ import {
   Text,
   StyleSheet,
   View,
-  ScrollView,
   RefreshControl,
+  FlatList,
 } from "react-native";
 import { getOrdersByUser, Order } from "@/services/orderService";
 import { currentUser } from "@/services/auth";
@@ -43,6 +43,33 @@ const OrderBar = () => {
     setRefreshing(false);
   }, [loadOrders]);
 
+  const renderItem = ({ item }: { item: Order }) => {
+    const firstCoffee = item.order_coffee[0]?.coffees?.name || "Coffee";
+    const hasMore = item.order_coffee.length > 1;
+
+    return (
+      <View style={styles.card}>
+        <View style={styles.left}>
+          <Text style={styles.orderNumber}>#{item.id.slice(0, 4)}</Text>
+        </View>
+
+        <View style={styles.center}>
+          <Text style={styles.orderName}>
+            {firstCoffee}
+            {hasMore ? "..." : ""}
+          </Text>
+          <Text style={styles.orderDate}>
+            {new Date(item.order_date).toLocaleDateString()}
+          </Text>
+        </View>
+
+        <View style={styles.right}>
+          <Text style={styles.orderPrice}>${item.total.toFixed(2)}</Text>
+        </View>
+      </View>
+    );
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.header}>
@@ -54,39 +81,26 @@ const OrderBar = () => {
           <ActivityIndicator size="large" color="#C67C4E" />
         </View>
       ) : (
-        <ScrollView
-          contentContainerStyle={styles.scrollContainer}
+        <FlatList
+          data={orders}
+          keyExtractor={(item) => item.id}
+          renderItem={renderItem}
+          ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+          ListEmptyComponent={() => (
+            <View style={styles.empty}>
+              <Text style={styles.emptyText}>Nenhum pedido encontrado ☕</Text>
+            </View>
+          )}
+          scrollEnabled
+          alwaysBounceVertical
+          contentContainerStyle={[
+            styles.scrollContainer,
+            { flexGrow: 1, paddingTop: 12, paddingBottom: 140 },
+          ]}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
-        >
-          {orders.map((order) => {
-            const firstCoffee = order.order_coffee[0]?.coffees?.name || "Coffee";
-            const hasMore = order.order_coffee.length > 1;
-
-            return (
-              <View style={styles.card} key={order.id}>
-                <View style={styles.left}>
-                  <Text style={styles.orderNumber}>#{order.id.slice(0, 4)}</Text>
-                </View>
-
-                <View style={styles.center}>
-                  <Text style={styles.orderName}>
-                    {firstCoffee}
-                    {hasMore ? "..." : ""}
-                  </Text>
-                  <Text style={styles.orderDate}>
-                    {new Date(order.order_date).toLocaleDateString()}
-                  </Text>
-                </View>
-
-                <View style={styles.right}>
-                  <Text style={styles.orderPrice}>${order.total.toFixed(2)}</Text>
-                </View>
-              </View>
-            );
-          })}
-        </ScrollView>
+        />
       )}
     </View>
   );
@@ -106,22 +120,22 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   scrollContainer: {
-    paddingVertical: 8,
+    paddingHorizontal: 8,
+    marginTop: 8,
   },
   card: {
     flexDirection: "row",
     backgroundColor: "#fff",
     borderRadius: 10,
-    paddingVertical: 12,
+    paddingVertical: 14,
     paddingHorizontal: 16,
-    marginHorizontal: 16,
-    marginVertical: 8,
+    marginHorizontal: 8,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
+    shadowOpacity: 0.08,
+    shadowRadius: 3,
+    elevation: 2,
   },
   left: {
     flex: 1,
@@ -133,7 +147,7 @@ const styles = StyleSheet.create({
   right: {
     flex: 1,
     alignItems: "flex-end",
-    marginRight: 14,
+    marginRight: 8,
   },
   orderNumber: {
     fontWeight: "700",
@@ -143,7 +157,7 @@ const styles = StyleSheet.create({
   },
   orderDate: {
     fontSize: 13,
-    color: "#aaa",
+    color: "#777",
     marginTop: 2,
   },
   orderName: {
@@ -153,7 +167,7 @@ const styles = StyleSheet.create({
   },
   orderPrice: {
     fontWeight: "700",
-    fontSize: 14,
+    fontSize: 15,
     color: "#000",
   },
   centered: {
@@ -161,6 +175,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingTop: 40,
+  },
+  empty: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: 80,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: "#888",
+    fontStyle: "italic",
   },
 });
 
