@@ -150,7 +150,7 @@ export default function DetailBar() {
           onPress={async () => {
             if (coffee) {
               await addToCart(coffee);
-              router.push("/cart");
+              router.push("/(cart)");
             }
           }}
         />

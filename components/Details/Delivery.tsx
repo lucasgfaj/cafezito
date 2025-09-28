@@ -15,7 +15,6 @@ export default function Delivery() {
 
   return (
     <View style={styles.container}>
-      {/* Barra de navegação */}
       <Navigation
         style={styles.navigation}
         iconRight="heart-outline"
@@ -23,7 +22,6 @@ export default function Delivery() {
         onRightPress={handleRightIconPress}
       />
 
-      {/* Mapa real */}
       <MapView
         style={styles.map}
         initialRegion={{
