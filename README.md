@@ -68,7 +68,7 @@ Previsão de desenvolvimento dividida em sprints de 2 semanas cada:
 | 3      | Perfil e ajuste de perfil                                  | 1 semana          | ✅ OK           |
 | 4      | Carrinho de compras                                        | 2 semanas         | ✅ OK           |
 | 5      | Histórico de pedidos                                       | 2 semanas         | ✅ OK           |
-| 7      | Delivery e Rota de Entrega com Maps                        | 1 semanas         | ⏳ Em andamento |
+| 7      | Delivery e Rota de Entrega com Maps                        | 1 semanas         | ✅ OK |
 | 6      | Testes finais e ajustes                                    | 2 semanas         | ⏳ Em andamento |
 
 ## Atualizações desde o último checkpoint
