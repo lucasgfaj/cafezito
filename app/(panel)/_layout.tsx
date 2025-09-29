@@ -7,9 +7,8 @@ export default function TabLayout() {
   const insets = useSafeAreaInsets();
   const segments = useSegments();
 
-  const hideTabBar = (segments as string[]).includes('(coffe)') && (segments as string[]).includes('[id]');
-  const hideTabBarDelivery = (segments as string[]).includes('(cart)') && (segments as string[]).includes('[delivery]');
-
+  // Verifica se está em uma tela de detalhe (coffe/[id] ou cart/[delivery])
+  const isInDetails = segments.some((s) => s === "[id]" || s === "[delivery]");
 
   return (
     <Tabs
@@ -17,7 +16,7 @@ export default function TabLayout() {
         tabBarActiveTintColor: "#C67C4E",
         tabBarShowLabel: false,
         tabBarHideOnKeyboard: true,
-        tabBarStyle: hideTabBar &&  hideTabBarDelivery
+        tabBarStyle: isInDetails
           ? { display: "none" }
           : {
               position: "absolute",

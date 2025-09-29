@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   navigation: {
-    marginTop: 40,
+    marginTop: 10,
     marginBottom: 16,
   },
   header: {
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   priceContainer: {
-    marginBottom: 150,
+    marginBottom: 90,
     marginTop: 24,
     flexDirection: "row",
     justifyContent: "space-between",
