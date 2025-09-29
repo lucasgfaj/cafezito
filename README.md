@@ -6,7 +6,7 @@ Projeto desenvolvido como atividade de curso de Sistemas para Internet na UTFPR 
 
 ## Demonstração do Sistema
 
-[Cafezito no Demonstração no Youtube](https://www.youtube.com/coloque-o-link-aqui)
+[Cafezito - Demonstração no Youtube](https://youtube.com/shorts/kqQ7FkwcQ2E)
 
 ## Imagens do Aplicativo
 <p align="center">
