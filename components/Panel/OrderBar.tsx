@@ -6,14 +6,18 @@ import {
   View,
   RefreshControl,
   FlatList,
+  TouchableOpacity,
 } from "react-native";
-import { getOrdersByUser, Order } from "@/services/orderService";
+import { useRouter } from "expo-router";
+import { getOrdersByUser} from "@/services/orderService";
 import { currentUser } from "@/services/auth";
+import { Order } from "@/types/ordersType";
 
 const OrderBar = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  const router = useRouter(); 
 
   const loadOrders = useCallback(async () => {
     try {
@@ -43,30 +47,39 @@ const OrderBar = () => {
     setRefreshing(false);
   }, [loadOrders]);
 
+  const handlePress = (orderId: string) => {
+    router.push({
+      pathname: "/(panel)/(cart)/[delivery]",
+      params: { delivery: orderId },
+    });
+  };
+
   const renderItem = ({ item }: { item: Order }) => {
     const firstCoffee = item.order_coffee[0]?.coffees?.name || "Coffee";
     const hasMore = item.order_coffee.length > 1;
 
     return (
-      <View style={styles.card}>
-        <View style={styles.left}>
-          <Text style={styles.orderNumber}>#{item.id.slice(0, 4)}</Text>
-        </View>
+      <TouchableOpacity onPress={() => handlePress(item.id)}>
+        <View style={styles.card}>
+          <View style={styles.left}>
+            <Text style={styles.orderNumber}>#{item.id.slice(0, 4)}</Text>
+          </View>
 
-        <View style={styles.center}>
-          <Text style={styles.orderName}>
-            {firstCoffee}
-            {hasMore ? "..." : ""}
-          </Text>
-          <Text style={styles.orderDate}>
-            {new Date(item.order_date).toLocaleDateString()}
-          </Text>
-        </View>
+          <View style={styles.center}>
+            <Text style={styles.orderName}>
+              {firstCoffee}
+              {hasMore ? "..." : ""}
+            </Text>
+            <Text style={styles.orderDate}>
+              {new Date(item.order_date).toLocaleDateString()}
+            </Text>
+          </View>
 
-        <View style={styles.right}>
-          <Text style={styles.orderPrice}>${item.total.toFixed(2)}</Text>
+          <View style={styles.right}>
+            <Text style={styles.orderPrice}>${item.total.toFixed(2)}</Text>
+          </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 

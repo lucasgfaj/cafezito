@@ -7,11 +7,65 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  DimensionValue,
 } from "react-native";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
-export default function DeliveryCard() {
+type DeliveryCardProps = {
+  status_order: number;
+};
+
+export default function DeliveryCard({ status_order }: DeliveryCardProps) {
   const tabBarHeight = useBottomTabBarHeight();
+
+  let barWidth: DimensionValue = 0;
+  let barColor = "#32B768";
+  let statusTitle = "";
+  let statusSubtitle = "";
+  let iconName = "time-outline";
+  let iconColor = "#32B768";
+
+  switch (status_order) {
+    case 1: 
+      barWidth = "100%";
+      barColor = "#32B768";
+      statusTitle = "Delivered your order";
+      statusSubtitle =
+        "We have delivered your goods to you in the shortest possible time.";
+      iconName = "checkmark-circle";
+      iconColor = "#32B768";
+      break;
+    case 2: 
+      barWidth = "50%";
+      barColor = "#32B768";
+      statusTitle = "Order in transit";
+      statusSubtitle = "Your order is on the way.";
+      iconName = "bicycle";
+      iconColor = "#32B768";
+      break;
+    case 3: 
+      barWidth = "100%";
+      barColor = "#E03E3E";
+      statusTitle = "Order cancelled";
+      statusSubtitle = "Your order was cancelled.";
+      iconName = "close-circle";
+      iconColor = "#E03E3E";
+      break;
+    case 4: 
+      barWidth = "100%";
+      barColor = "#F2994A";
+      statusTitle = "Order lost";
+      statusSubtitle = "We lost your order. Sorry!";
+      iconName = "alert-circle";
+      iconColor = "#F2994A";
+      break;
+    default:
+      barWidth = "0%";
+      statusTitle = "Status unknown";
+      statusSubtitle = "";
+      iconName = "help-circle";
+      iconColor = "#999";
+  }
 
   return (
     <View style={[styles.container, { paddingBottom: tabBarHeight + 50 }]}>
@@ -24,30 +78,33 @@ export default function DeliveryCard() {
           Delivery to <Text style={{ fontWeight: "600" }}>Jl. Kpg Sutoyo</Text>
         </Text>
 
-        {/* Linha de progresso */}
         <View style={styles.progress}>
-          <View style={styles.bar} />
+          <View
+            style={[
+              styles.bar,
+              {
+                width: barWidth,
+                backgroundColor: barColor,
+              },
+            ]}
+          />
         </View>
 
-        {/* Status */}
         <View style={styles.statusRow}>
-          <Ionicons name="checkmark-circle" size={24} color="#32B768" />
+          <Ionicons name={iconName as any} size={24} color={iconColor} />
           <View style={{ marginLeft: 10, flex: 1 }}>
-            <Text style={styles.statusTitle}>Delivered your order</Text>
-            <Text style={styles.statusSubtitle}>
-              We will deliver your goods to you in the shortest possible time.
-            </Text>
+            <Text style={styles.statusTitle}>{statusTitle}</Text>
+            <Text style={styles.statusSubtitle}>{statusSubtitle}</Text>
           </View>
         </View>
 
-        {/* Entregador */}
         <View style={styles.courierRow}>
           <Image
             source={{ uri: "https://randomuser.me/api/portraits/men/75.jpg" }}
             style={styles.avatar}
           />
           <View style={{ flex: 1 }}>
-            <Text style={styles.courierName}>Brooklyn Simmons</Text>
+            <Text style={styles.courierName}>Andres Simmons</Text>
             <Text style={styles.courierLabel}>Personal Courier</Text>
           </View>
           <TouchableOpacity>
@@ -72,7 +129,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 10,
     elevation: 10,
-    maxHeight: "55%", // 👈 limita altura e ativa scroll
+    maxHeight: "55%",
   },
   timeText: {
     fontSize: 18,
@@ -91,9 +148,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   bar: {
-    width: "75%",
     height: "100%",
-    backgroundColor: "#32B768",
   },
   statusRow: {
     flexDirection: "row",

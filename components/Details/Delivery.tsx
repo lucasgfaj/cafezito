@@ -1,26 +1,53 @@
-import { Ionicons } from "@expo/vector-icons";
-import { router, useLocalSearchParams } from "expo-router";
-import React from "react";
-import { StyleSheet, View } from "react-native";
-import Navigation from "../ui/Navigation";
-import { useUserProfile } from "@/hooks/useUserProfile";
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet, ActivityIndicator, Text } from "react-native";
 import MapView, { Marker } from "react-native-maps";
+import { router, useLocalSearchParams } from "expo-router";
+import Navigation from "../ui/Navigation";
 import DeliveryCard from "./DeliveryCard";
-
+import { getOrdersByUser} from "@/services/orderService";
+import { currentUser } from "@/services/auth";
+import { Order } from "@/types/ordersType";
 export default function Delivery() {
   const { delivery } = useLocalSearchParams();
-  const handleBack = () => router.back();
-  const handleRightIconPress = () => console.log("Local");
-  const profile = useUserProfile();
+  const [order, setOrder] = useState<Order | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const handleBack = () => router.push("/orders");
+
+  useEffect(() => {
+    async function loadOrder() {
+      const user = await currentUser();
+      if (!user) return;
+
+      const orders = await getOrdersByUser(user.id);
+      if (!orders) return;
+
+      const currentOrder = orders.find((o) => o.id === delivery);
+      setOrder(currentOrder || null);
+      setLoading(false);
+    }
+    loadOrder();
+  }, [delivery]);
+
+  if (loading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color="#C67C4E" />
+      </View>
+    );
+  }
+
+  if (!order) {
+    return (
+      <View style={styles.centered}>
+        <Text>Order not found.</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
-      <Navigation
-        style={styles.navigation}
-        iconRight="heart-outline"
-        onBackPress={handleBack}
-        onRightPress={handleRightIconPress}
-      />
+      <Navigation style={styles.navigation} onBackPress={handleBack} />
 
       <MapView
         style={styles.map}
@@ -30,10 +57,10 @@ export default function Delivery() {
           latitudeDelta: 0.01,
           longitudeDelta: 0.01,
         }}
-        scrollEnabled={true}
-        zoomEnabled={true}
-        rotateEnabled={true}
-        pitchEnabled={true}
+        scrollEnabled
+        zoomEnabled
+        rotateEnabled
+        pitchEnabled
       >
         <Marker
           coordinate={{
@@ -41,24 +68,18 @@ export default function Delivery() {
             longitude: -46.633308,
           }}
           title="Courier"
-          description="Entregador está aqui"
+          description="Delivery is here!"
         />
       </MapView>
 
-      {/* Card da entrega */}
-      <DeliveryCard />
+      <DeliveryCard status_order={order.status_order} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  map: {
-    flex: 1,
-  },
+  container: { flex: 1, backgroundColor: "#fff" },
+  map: { flex: 1 },
   navigation: {
     position: "absolute",
     top: 50,
@@ -66,4 +87,5 @@ const styles = StyleSheet.create({
     right: 20,
     zIndex: 10,
   },
+  centered: { flex: 1, justifyContent: "center", alignItems: "center" },
 });
