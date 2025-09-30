@@ -1,29 +1,6 @@
 import { supabase } from "@/lib/supabase";
+import { Order, AddOrderInput } from "@/types/ordersType";
 
-// ---- Tipos ----
-export type Coffee = {
-  id: string;
-  name: string;
-  price: number;
-};
-
-export type OrderCoffee = {
-  order_id: string;
-  coffee_id: string;
-  quantity: number;
-  unit_price: number;
-  coffees?: Coffee; // join (1 café por linha)
-};
-
-export type Order = {
-  id: string;
-  user_id: string;
-  order_date: string;
-  total: number;
-  order_coffee: OrderCoffee[];
-};
-
-// ---- Listar pedidos de um usuário ----
 export async function getOrdersByUser(userId: string): Promise<Order[] | null> {
   const { data, error } = await supabase
     .from("orders")
@@ -32,6 +9,7 @@ export async function getOrdersByUser(userId: string): Promise<Order[] | null> {
       user_id,
       order_date,
       total,
+      status_order,
       order_coffee (
         order_id,
         coffee_id,
@@ -44,11 +22,9 @@ export async function getOrdersByUser(userId: string): Promise<Order[] | null> {
     .order("order_date", { ascending: false });
 
   if (error) {
-    console.error("Error fetching orders:", error);
     return null;
   }
 
-  // ⚠️ O Supabase retorna coffees como array -> pegamos só o primeiro item
   const normalized = data.map((order: any) => ({
     ...order,
     order_coffee: order.order_coffee.map((oc: any) => ({
@@ -60,27 +36,15 @@ export async function getOrdersByUser(userId: string): Promise<Order[] | null> {
   return normalized as Order[];
 }
 
-// ---- Criar pedido + cafés ----
-type AddOrderInput = {
-  user_id: string;
-  coffees: {
-    coffee_id: string;
-    quantity: number;
-    unit_price: number;
-  }[];
-};
-
 export async function addOrder({
   user_id,
   coffees,
 }: AddOrderInput): Promise<Order | null> {
-  // calcular total
   const total = coffees.reduce(
     (sum, c) => sum + c.quantity * c.unit_price,
     0
   );
 
-  // criar pedido
   const { data: orderData, error: orderError } = await supabase
     .from("orders")
     .insert([
@@ -88,17 +52,16 @@ export async function addOrder({
         user_id,
         order_date: new Date().toISOString(),
         total,
+        status_order: 2,
       },
     ])
     .select()
     .single();
 
   if (orderError) {
-    console.error("Erro ao criar pedido:", orderError);
     return null;
   }
 
-  // vincular cafés ao pedido
   const order_id = orderData.id;
   const orderCoffees = coffees.map((c) => ({
     order_id,
@@ -112,7 +75,6 @@ export async function addOrder({
     .insert(orderCoffees);
 
   if (ocError) {
-    console.error("Erro ao inserir cafés do pedido:", ocError);
     return null;
   }
 

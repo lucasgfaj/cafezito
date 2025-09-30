@@ -145,11 +145,12 @@ export default function DetailBar() {
         <Text style={styles.price}>${coffee.price}</Text>
 
         <Button
+          style={styles.buyButton}
           text="Buy Now"
           onPress={async () => {
             if (coffee) {
               await addToCart(coffee);
-              router.push("/cart");
+              router.push("/(cart)");
             }
           }}
         />
@@ -165,7 +166,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   navigation: {
-    marginTop: 40,
+    marginTop: 10,
     marginBottom: 16,
   },
   header: {
@@ -233,19 +234,20 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   priceContainer: {
+    marginBottom: 90,
     marginTop: 24,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 80,
   },
   price: {
     color: "#C67C4E",
     fontWeight: "bold",
     fontSize: 22,
   },
+
   buyButton: {
-    paddingHorizontal: 32,
-    paddingVertical: 12,
+    flex: 1,
+    marginLeft: 16,
   },
 });

@@ -4,6 +4,19 @@ O Cafezito App é um aplicativo pensado para os amantes de café. Ele permite de
 
 Projeto desenvolvido como atividade de curso de Sistemas para Internet na UTFPR - Guarapuava.
 
+## Demonstração do Sistema
+
+[Cafezito - Demonstração no Youtube](https://youtube.com/shorts/kqQ7FkwcQ2E)
+
+## Imagens do Aplicativo
+<p align="center">
+   <img width="200" alt="image" src="https://github.com/user-attachments/assets/56e0de3d-b90e-449e-b0dd-0dfd24de39eb" />
+   <img width="200" alt="image" src="https://github.com/user-attachments/assets/be019f06-5522-47ce-9905-a6cf5f87faba" />
+   <img width="200" alt="image" src="https://github.com/user-attachments/assets/202a66ee-585f-4c44-b8a7-9dbfbdebf7ac" />
+   <img width="200" alt="image" src="https://github.com/user-attachments/assets/3d78a4de-144c-4015-9b25-d793c948a83a" />
+</p>
+
+
 ## Sobre o app
 
 O app tem como objetivo principal melhorar a experiência de quem ama café, centralizando informações sobre cafés, cafeterias e pedidos.
@@ -46,14 +59,24 @@ O diagrama completo do banco pode ser acessado aqui:
 
 Previsão de desenvolvimento dividida em sprints de 2 semanas cada:
 
-| Sprint | Funcionalidades previstas                       | Previsão de tempo |
-|--------|-----------------------------------------------|-----------------|
-| 1      | Configuração do ambiente, cadastro de usuários | 1 semanas       |
-| 2      | Listagem de cafés, registro de cafés favoritos | 1 semanas |
-| 3      | Avaliações                       | 1 semanas       |
-| 4      | Carrinho de Compras               | 2 semanas      |
-| 5      | Histórico de pedidos e integração com promoções | 2 semanas      |
-| 6      | Testes finais e ajustes                         | 2 semanas       |
+### 📅 Planejamento de Sprints
+
+| Sprint | Funcionalidades previstas                                  | Previsão de tempo | Status          |
+|--------|------------------------------------------------------------|-------------------|-----------------|
+| 1      | Configuração do ambiente, cadastro de usuários             | 1 semana          | ✅ OK           |
+| 2      | Listagem de cafés, registro de cafés favoritos             | 1 semana          | ✅ OK           |
+| 3      | Perfil e ajuste de perfil                                  | 1 semana          | ✅ OK           |
+| 4      | Carrinho de compras                                        | 2 semanas         | ✅ OK           |
+| 5      | Histórico de pedidos                                       | 2 semanas         | ✅ OK           |
+| 7      | Delivery e Rota de Entrega com Maps                        | 1 semanas         | ✅ OK |
+| 6      | Testes finais e ajustes                                    | 2 semanas         | ⏳ Em andamento |
+
+## Atualizações desde o último checkpoint
+
+- Integração com **API do Supabase** para autenticação e manipulação de tabelas (usuários, pedidos, cafés, etc).
+- Criação de **hooks personalizados** (`useUserProfile`, `useCart`, entre outros) para melhor organização e reaproveitamento de lógica.
+- Utilização de **AsyncStorage** para persistência local de dados referente ao carrinho.
+- Projeto utilizando **Expo Maps** para desenvolvimento do mapa de delivery.
 
 ## Ambiente de desenvolvimento e ferramentas
 
@@ -77,7 +100,32 @@ Previsão de desenvolvimento dividida em sprints de 2 semanas cada:
    ```bash
    yarn start
     ```
-   
+
+## Atualizando o Expo - Passo a Passo
+
+1. Remover `yarn.lock`
+
+Remova o arquivo de lock para garantir uma reinstalação limpa das dependências.
+
+```bash
+rm yarn.lock
+```
+
+2. Adicionar o pacote do Expo novamente
+
+Adiciona a versão mais recente disponível do Expo ao seu projeto.
+
+```bash
+yarn add expo
+```
+
+3. Corrigir dependências com `expo install --fix`
+
+Verifica e corrige automaticamente os pacotes para combinar com a versão atual do SDK.
+
+```bash
+npx expo install --fix
+```
 ## License
 
 [MIT license](https://opensource.org/licenses/MIT)
