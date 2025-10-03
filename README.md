@@ -78,6 +78,15 @@ Previsão de desenvolvimento dividida em sprints de 2 semanas cada:
 - Utilização de **AsyncStorage** para persistência local de dados referente ao carrinho.
 - Projeto utilizando **Expo Maps** para desenvolvimento do mapa de delivery.
 
+## Boas Práticas Implementadas
+
+- **Componentização**: Criei componentes reutilizáveis no diretório `components/ui`, como o `Button`, que recebe **props** e é utilizado em diferentes telas (`Home`, `Sign-In`, `Sign-Up`, `Sign-Out`).  
+- **Serviços desacoplados (Services)**: Implementei a comunicação com o **Supabase** em `services`, centralizando chamadas de autenticação e banco de dados em um único lugar.  
+- **Hooks customizados**: Desenvolvi hooks como `useUserProfile` para lidar com lógica de perfil de usuário (fetch, update, logout), mantendo o código das telas limpo e reutilizável.  
+- **Context API**: Gerenciei estados globais de autenticação (`Tokens` e `UserId`) com **Context API**, reduzindo a necessidade de props drilling.  
+- **Organização por responsabilidade**: Separei bem **UI, services, hooks, contextos e rotas**, facilitando manutenção e evolução do projeto.  
+- **Reutilização e manutenção**: A arquitetura permite reaproveitar componentes, contextos, hooks e services em várias partes do sistema sem duplicação de código.  
+- **Escalabilidade**: A estrutura facilita a adição de novas telas e funcionalidades sem comprometer as existentes.  
 ## Ambiente de desenvolvimento e ferramentas
 
 - [Framework Expo](https://expo.dev/)
