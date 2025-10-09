@@ -39,7 +39,7 @@ const SignInScreen = () => {
 
       // Se chegou aqui, logou com sucesso
       if (data?.session) {
-        router.push("/(panel)");
+        router.push("/(panel)/(coffe)"); // Navega para a tela principal
       }
     } catch (e: any) {
       Alert.alert("Erro inesperado", e.message);
