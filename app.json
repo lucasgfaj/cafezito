@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "cafezito",
+    "name": "Cafezito",
     "slug": "cafezito",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -14,14 +14,21 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.lucasgfaj.cafezito"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ],
+      "package": "com.lucasgfaj.cafezito",
+      "jsEngine": "hermes"
     },
     "web": {
       "bundler": "metro",
@@ -41,6 +48,23 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "88da7a0e-f926-4e1d-9e79-c4f1efa871ff"
+      }
+    },
+    "owner": "lucasgfaj",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "enabled": false,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/88da7a0e-f926-4e1d-9e79-c4f1efa871ff",
+      "channel": "preview"
     }
   }
 }
