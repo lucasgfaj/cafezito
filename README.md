@@ -6,7 +6,13 @@ Projeto desenvolvido como atividade de curso de Sistemas para Internet na UTFPR 
 
 ## Demonstração do Sistema
 
-[Cafezito - Demonstração no Drive](https://drive.google.com/file/d/1PPhL8OzxKk3IXZk4jiYPKwCjG5PpzASN/view?usp=sharing)
+- [Cafezito - Demonstração no Drive](https://drive.google.com/file/d/1PPhL8OzxKk3IXZk4jiYPKwCjG5PpzASN/view?usp=sharing)<br>
+- [Cafezito - Defesa no Drive](https://drive.google.com/file/d/1PPhL8OzxKk3IXZk4jiYPKwCjG5PpzASN/view?usp=sharing)
+
+
+<p align="center">
+   <img width="800" height="800" alt="Lucas Fajardo - Cafezito" src="https://github.com/user-attachments/assets/3ef3fdb5-ea0a-4647-9da5-39c0c7940198" />
+</p>
 
 ## Imagens do Aplicativo
 <p align="center">
@@ -25,7 +31,6 @@ O app tem como objetivo principal melhorar a experiência de quem ama café, cen
 - [x] Cadastro de usuários
 - [x] Listagem de cafés
 - [x] Registro de cafés favoritos
-- [x] Avaliação dos cafés
 - [x] Compra de Cafés
 - [x] Histórico de Pedidos
 - [X] Carrinho de Compras
