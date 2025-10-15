@@ -7,7 +7,7 @@ Projeto desenvolvido como atividade de curso de Sistemas para Internet na UTFPR 
 ## Demonstração do Sistema
 
 - [Cafezito - Demonstração no Drive](https://drive.google.com/file/d/1PPhL8OzxKk3IXZk4jiYPKwCjG5PpzASN/view?usp=sharing)<br>
-- [Cafezito - Defesa no Drive](https://drive.google.com/file/d/1PPhL8OzxKk3IXZk4jiYPKwCjG5PpzASN/view?usp=sharing)
+- [Cafezito - Defesa no Drive](https://drive.google.com/file/d/1FKFnJvrhM9jzv0_butKLvgIh1z6CXusq/view?usp=sharing)
 
 
 <p align="center">
